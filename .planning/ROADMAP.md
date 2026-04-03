@@ -41,7 +41,10 @@
 7. Images load as WebP/AVIF via next/image with declared dimensions
 8. Fonts (Inter, Roboto Mono) load via next/font without layout shift (FOUT prevented)
 
-**Plans:** TBD
+**Plans:** 1 plan
+
+Plans:
+- [ ] 01-01-PLAN.md — Scaffold, configure env/fonts/CSS, generate 6 sections via Stitch MCP, migrate Navigation + ScheduleModal, wire home page, validate build
 
 **UI hint:** yes
 
@@ -135,7 +138,7 @@
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Technical Setup | 0/? | Not started | — |
+| 1. Foundation & Technical Setup | 0/1 | Not started | — |
 | 2. Local SEO & Metadata Optimization | 0/? | Not started | — |
 | 3. Forms & Integration | 0/? | Not started | — |
 | 4. Chat Widget & Integration | 0/? | Not started | — |

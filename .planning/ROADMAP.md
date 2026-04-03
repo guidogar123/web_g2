@@ -91,7 +91,10 @@ Plans:
 5. DevTools shows form submits to `/api/webhook/n8n/contact` (internal API route), not directly to external n8n URL
 6. Network tab shows all form submissions logged for audit trail (timestamps, IP origin, success/failure)
 
-**Plans:** TBD
+**Plans:** 1 plan
+
+Plans:
+- [ ] 03-01-PLAN.md — Install zod, create schemas + rate-limiter, create API routes, fix Contacto.tsx, update ScheduleModal.tsx, build validation
 
 ---
 

@@ -136,7 +136,10 @@ Plans:
 7. Vercel Environment Variables are configured; no webhook URLs visible in browser DevTools or build logs
 8. DevTools shows zero error console warnings; all network requests succeed or fail gracefully
 
-**Plans:** TBD
+**Plans:** 1 plan
+
+Plans:
+- [ ] 05-01-PLAN.md — Add ISR, production build, Vercel deploy, human env/forms/DNS checkpoint, post-deploy verification
 
 ---
 

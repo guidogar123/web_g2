@@ -33,9 +33,9 @@
 
 ### Chat Widget
 
-- [ ] **CHAT-01**: El widget `@n8n/chat` carga correctamente sin errores SSR usando `dynamic()` con `ssr: false`
-- [ ] **CHAT-02**: El chat mantiene la paleta Emerald Intelligence: botón #10b981, fondo chat #0a0a0a
-- [ ] **CHAT-03**: El webhook del chat sigue conectado a `NEXT_PUBLIC_N8N_CHAT_WEBHOOK_URL`
+- [x] **CHAT-01**: El widget `@n8n/chat` carga correctamente sin errores SSR usando `dynamic()` con `ssr: false`
+- [x] **CHAT-02**: El chat mantiene la paleta Emerald Intelligence: botón #10b981, fondo chat #0a0a0a
+- [x] **CHAT-03**: El webhook del chat sigue conectado a `NEXT_PUBLIC_N8N_CHAT_WEBHOOK_URL`
 
 ### Diseño Visual
 
@@ -103,9 +103,9 @@
 | FORM-04 | Phase 3 | Complete |
 | FORM-05 | Phase 3 | Complete |
 | FORM-06 | Phase 3 | Complete |
-| CHAT-01 | Phase 4 | Pending |
-| CHAT-02 | Phase 4 | Pending |
-| CHAT-03 | Phase 4 | Pending |
+| CHAT-01 | Phase 4 | Complete |
+| CHAT-02 | Phase 4 | Complete |
+| CHAT-03 | Phase 4 | Complete |
 | UI-01 | Phase 1 | Pending |
 | UI-02 | Phase 1 | Pending |
 | UI-03 | Phase 1 | Pending |

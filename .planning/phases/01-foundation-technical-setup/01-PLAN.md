@@ -32,8 +32,8 @@ requirements:
   - UI-01
   - UI-02
   - UI-03
-  - PERF-03
   - PERF-04
+  # PERF-03 (next/image for images) is deferred: Phase 1 sections are text/icon-only, no images to optimize yet
 
 must_haves:
   truths:
@@ -621,6 +621,19 @@ Call `mcp__stitch__generate_screen_from_text` with:
   ```
 
 Write to `sitio-g2-nextjs/src/components/sections/Contacto.tsx`.
+
+**After writing Contacto.tsx, verify and enforce `'use client'`:**
+```bash
+head -1 "C:/Users/guido/OneDrive/G2INNOVATION/WEB_G2/sitio-g2-nextjs/src/components/sections/Contacto.tsx"
+```
+If the output is NOT `'use client'`, add it manually as the very first line before all imports.
+This is required because the form uses `useState` hooks, which only work in Client Components.
+
+**IMPORTANT: Phase 1 form is intentionally UI-only (stub for Phase 3)**
+- The form captures all fields: nombre, email, empresa, mensaje
+- `handleSubmit` logs form data to console only — does NOT call any webhook
+- Real webhook integration (FORM-01) is Phase 3 scope
+- Fields and structure are correct so Phase 3 just adds the API call
 
 **Step 4.3 — Generate Footer section:**
 

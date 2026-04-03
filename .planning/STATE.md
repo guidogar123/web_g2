@@ -1,3 +1,17 @@
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: planning
+stopped_at: Completed 03-forms-integration/03-01-PLAN.md
+last_updated: "2026-04-03T23:28:55.168Z"
+progress:
+  total_phases: 5
+  completed_phases: 3
+  total_plans: 3
+  completed_plans: 3
+---
+
 # G2 Intelligence — Project State
 
 **Project:** G2 Intelligence Website Rebuild (React SPA → Next.js 15)
@@ -15,6 +29,7 @@ Que cuando una empresa del Valle del Cauca busque "inteligencia artificial para 
 Transforming React SPA (Vite) into Next.js 15 App Router site optimized for local Colombian SEO and lead capture.
 
 **Key Numbers:**
+
 - 28 v1 requirements
 - 5 phases (COARSE granularity)
 - Target: LCP < 2.5s, CLS < 0.1, Core Web Vitals green
@@ -29,6 +44,7 @@ Transforming React SPA (Vite) into Next.js 15 App Router site optimized for loca
 **Status:** Phase 2 complete, awaiting Phase 3 planning and execution
 
 **Progress Bar:**
+
 ```
 [========-] Phase 2: 100% (1/1 plans complete)
 ```
@@ -41,11 +57,13 @@ Transforming React SPA (Vite) into Next.js 15 App Router site optimized for loca
 ## Phase Overview
 
 ### Phase 1: Foundation & Technical Setup [IN PROGRESS]
+
 **Goal:** Establish Next.js 15 App Router with all sections migrated, env vars secured, pitfalls prevented
 
 **Requirements:** 8 mapped (MIGR-01, MIGR-02, MIGR-03, UI-01, UI-02, UI-03, PERF-03, PERF-04)
 **Success Criteria:** 8 observable behaviors
 **Key Success:**
+
 - `npm run build` succeeds, <100KB gzip, zero async params warnings
 - All 6 content sections visible and styled
 - No webhook URLs in code/build output
@@ -57,11 +75,13 @@ Transforming React SPA (Vite) into Next.js 15 App Router site optimized for loca
 ---
 
 ### Phase 2: Local SEO & Metadata Optimization [COMPLETE]
+
 **Goal:** Geo-target metadata, add structured data, rank for local searches
 
 **Requirements:** 8 mapped (SEO-01 through SEO-07, UI-04)
 **Success Criteria:** 6 observable behaviors
 **Key Success:**
+
 - Unique titles/descriptions with city names — DONE
 - geo.region CO-VAC, geo.placename Cali, ICBM coordinates in metadata.other — DONE
 - Service schemas show correct provider (6 ItemList entries) — DONE
@@ -78,11 +98,13 @@ Transforming React SPA (Vite) into Next.js 15 App Router site optimized for loca
 ---
 
 ### Phase 3: Forms & Integration [PLANNED]
+
 **Goal:** Fix contact form (currently simulated), validate inputs, secure API routes
 
 **Requirements:** 6 mapped (FORM-01 through FORM-06)
 **Success Criteria:** 6 observable behaviors
 **Key Success:**
+
 - Form data reaches n8n inbox within 2 seconds
 - Specific error messages displayed
 - Rate limiting prevents spam (429 after 3 requests/5min)
@@ -93,11 +115,13 @@ Transforming React SPA (Vite) into Next.js 15 App Router site optimized for loca
 ---
 
 ### Phase 4: Chat Widget & Integration [PLANNED]
+
 **Goal:** Load @n8n/chat without SSR errors, apply Emerald Intelligence theme
 
 **Requirements:** 3 mapped (CHAT-01, CHAT-02, CHAT-03)
 **Success Criteria:** 6 observable behaviors
 **Key Success:**
+
 - Widget loads without "window is undefined" errors
 - Appears within 2 seconds
 - Theme colors match brand (#10b981 emerald, #0a0a0a chat bg)
@@ -108,11 +132,13 @@ Transforming React SPA (Vite) into Next.js 15 App Router site optimized for loca
 ---
 
 ### Phase 5: Performance & Launch Validation [PLANNED]
+
 **Goal:** Optimize Core Web Vitals, validate end-to-end, deploy to Vercel
 
 **Requirements:** 3 mapped (MIGR-04, PERF-01, PERF-02)
 **Success Criteria:** 8 observable behaviors
 **Key Success:**
+
 - PageSpeed Insights all green (LCP < 2.5s, CLS < 0.1, INP < 100ms)
 - Lighthouse 90+ across all categories
 - Deployed to g2intelligence.co with environment variables secure
@@ -131,6 +157,7 @@ Transforming React SPA (Vite) into Next.js 15 App Router site optimized for loca
 **Database:** None (static site + n8n backend)
 
 **Key Files:**
+
 - Existing source: `Kimi_Agent_Diseño web G2Intelligence/app/` (React + Vite)
 - Current build: `sitio-g2/` (static HTML, currently deployed)
 - Brand kit: `G2_Social_Media_Kit/master_brand_kit.md`
@@ -144,10 +171,12 @@ Transforming React SPA (Vite) into Next.js 15 App Router site optimized for loca
 ### Critical (Must Fix in This Roadmap)
 
 **Bug: Contact Form Simulation (Contacto.tsx:70-72)**
+
 ```javascript
 // Current behavior: shows "Enviado" but discards all data
 await new Promise((resolve) => setTimeout(resolve, 1500));
 ```
+
 **Fix:** FORM-01 in Phase 3 — connect to n8n webhook via API route
 **Impact:** Lead loss; customers think message sent but it's not
 
@@ -173,6 +202,7 @@ await new Promise((resolve) => setTimeout(resolve, 1500));
 ## Performance Baselines
 
 **Target Core Web Vitals (Phase 5 success criteria):**
+
 - LCP (Largest Contentful Paint): < 2.5s (current unknown, Phase 1 establishes baseline)
 - CLS (Cumulative Layout Shift): < 0.1 (font loading via next/font, fixed dimensions)
 - INP (Interaction to Next Paint): < 100ms (minimal client JS)
@@ -198,10 +228,14 @@ await new Promise((resolve) => setTimeout(resolve, 1500));
 | MetadataRoute file conventions for sitemap/robots | Idiomatic Next.js App Router pattern; confirmed in node_modules docs | ✓ Phase 2 execution |
 
 ---
+- [Phase 03]: Phone validation uses min(7)/max(20) — strict Colombian regex excluded for UX
+- [Phase 03]: NEXT_PUBLIC_N8N_CHAT_WEBHOOK_URL preserved in .env.local for Phase 4 chat widget
+- [Phase 03]: N8N_WEBHOOK_URL is server-only, exposed only in API routes — never in client components
 
 ## Accumulated Context
 
 ### Setup Assumptions
+
 - Existing React SPA source lives at `Kimi_Agent_Diseño web G2Intelligence/app/`
 - Emerald Intelligence color palette locked: #050505 (void black), #10b981 (emerald), #0d1117 (deep slate)
 - n8n webhook endpoint: `https://n8n-n8n.ektnbd.easypanel.host/webhook/1c0360f1-fe27-42a5-9d24-7b52aebe9dd2/chat`
@@ -210,18 +244,21 @@ await new Promise((resolve) => setTimeout(resolve, 1500));
 - Icons/Images: From existing SPA where possible; Stitch MCP for new screens
 
 ### SEO Context
+
 - Target geo: Cali, Jamundí, Palmira, Yumbo, Valle del Cauca, Colombia
 - Primary keywords: "inteligencia artificial para ventas", "automatización Cali", "agentes inteligentes"
 - Competitor landscape: General tech consultancies without AI specialization (low local authority)
 - CMS: None in v1 (static content only)
 
 ### Webhook Integration Context
+
 - Chat widget: Uses `@n8n/chat` library, connects directly to n8n (acceptable for streaming)
 - Forms: POST to Next.js API routes (not direct to n8n, prevents CORS + enables rate limiting)
 - Rate limiting: Server-side, max 3 requests per IP per 5 minutes (Phase 3)
 - Logging: All submissions logged for audit trail (n8n input + client-side logs)
 
 ### Brand/Design Context
+
 - Logo: Emerald Intelligence wordmark (exists, no redesign)
 - 6 content sections: Hero, Servicios, Nosotros, Equipo, Contacto, Footer (all must be present)
 - Chat widget theme: Button #10b981, chat background #0a0a0a (dark mode, emerald accents)
@@ -232,19 +269,23 @@ await new Promise((resolve) => setTimeout(resolve, 1500));
 ## Open Questions
 
 **For Phase 1 Planning:**
+
 1. Should we use `next/image` for all images or keep some as `<img>` placeholders until Stitch MCP generates assets?
 2. Which existing React components can be reused vs. need full redesign with Stitch MCP?
 3. Where does `/public` directory sit? Should brand assets (logo, OG image) already exist, or will Stitch generate them?
 
 **For Phase 2 Planning:**
+
 1. Should each service get its own `/servicios/[slug]` page or remain section-based on homepage? (v2 scope?)
 2. Which Colombian keywords should `generateMetadata()` target? Need keyword research output.
 
 **For Phase 3 Planning:**
+
 1. Exact n8n webhook schema for contact form — is it exactly `{ type: 'contact', nombre, email, empresa, mensaje }` or different field names?
 2. Should error logs be sent to Sentry or stored locally?
 
 **For Phase 5 Planning:**
+
 1. g2intelligence.co domain — is it already pointing to current `sitio-g2/`? When should we point DNS to Vercel?
 2. SSL certificate — does Vercel auto-provision or do we need manual setup?
 
@@ -253,6 +294,7 @@ await new Promise((resolve) => setTimeout(resolve, 1500));
 ## Session Continuity
 
 **What This Session Did:**
+
 - Executed Phase 2: Local SEO & Metadata Optimization (02-01-PLAN.md)
 - Enhanced layout.tsx: metadataBase, openGraph, twitter, geo.region CO-VAC, lang=es-CO
 - Enhanced LocalBusiness schema: typed areaServed, priceRange, knowsAbout, addressLocality
@@ -264,13 +306,15 @@ await new Promise((resolve) => setTimeout(resolve, 1500));
 - npm run build exits 0, all routes static, TypeScript clean
 
 **Handoff to Phase 3 Planning:**
+
 - ROADMAP.md ready for `/gsd:plan-phase 3`
 - Phase 3: Forms & Integration (6 requirements: FORM-01 through FORM-06)
 - Key scope: Fix simulated contact form, connect to n8n webhook, rate limiting, input validation
 
-**Stopped at:** Completed 02-local-seo-metadata-optimization/02-01-PLAN.md
+**Stopped at:** Completed 03-forms-integration/03-01-PLAN.md
 
 **If Session Lost:**
+
 - Read `.planning/ROADMAP.md` for phase goals and requirements
 - Read `.planning/PROJECT.md` for core value and constraints
 - Read `.planning/REQUIREMENTS.md` for v1 scope

@@ -24,12 +24,12 @@
 
 ### Formularios e Integraciones
 
-- [ ] **FORM-01**: El formulario de contacto envía datos reales al webhook n8n con `{ type: 'contact', nombre, email, empresa, mensaje }` (fix bug simulación)
-- [ ] **FORM-02**: El formulario de agenda envía datos al webhook n8n con `{ type: 'scheduling', nombre, email, telefono, fecha, hora }` (preservar funcionalidad existente)
-- [ ] **FORM-03**: Todos los campos de formulario se validan con Zod tanto en cliente como en servidor antes del envío
-- [ ] **FORM-04**: Los errores de envío muestran mensajes descriptivos específicos al usuario (no mensajes genéricos)
-- [ ] **FORM-05**: Las API Routes de Next.js proxean las peticiones al webhook n8n (no llamadas directas cliente→n8n que causan CORS)
-- [ ] **FORM-06**: Rate limiting server-side en las API Routes de formularios previene spam y abuso
+- [x] **FORM-01**: El formulario de contacto envía datos reales al webhook n8n con `{ type: 'contact', nombre, email, empresa, mensaje }` (fix bug simulación)
+- [x] **FORM-02**: El formulario de agenda envía datos al webhook n8n con `{ type: 'scheduling', nombre, email, telefono, fecha, hora }` (preservar funcionalidad existente)
+- [x] **FORM-03**: Todos los campos de formulario se validan con Zod tanto en cliente como en servidor antes del envío
+- [x] **FORM-04**: Los errores de envío muestran mensajes descriptivos específicos al usuario (no mensajes genéricos)
+- [x] **FORM-05**: Las API Routes de Next.js proxean las peticiones al webhook n8n (no llamadas directas cliente→n8n que causan CORS)
+- [x] **FORM-06**: Rate limiting server-side en las API Routes de formularios previene spam y abuso
 
 ### Chat Widget
 
@@ -97,12 +97,12 @@
 | SEO-05 | Phase 2 | Pending |
 | SEO-06 | Phase 2 | Pending |
 | SEO-07 | Phase 2 | Pending |
-| FORM-01 | Phase 3 | Pending |
-| FORM-02 | Phase 3 | Pending |
-| FORM-03 | Phase 3 | Pending |
-| FORM-04 | Phase 3 | Pending |
-| FORM-05 | Phase 3 | Pending |
-| FORM-06 | Phase 3 | Pending |
+| FORM-01 | Phase 3 | Complete |
+| FORM-02 | Phase 3 | Complete |
+| FORM-03 | Phase 3 | Complete |
+| FORM-04 | Phase 3 | Complete |
+| FORM-05 | Phase 3 | Complete |
+| FORM-06 | Phase 3 | Complete |
 | CHAT-01 | Phase 4 | Pending |
 | CHAT-02 | Phase 4 | Pending |
 | CHAT-03 | Phase 4 | Pending |

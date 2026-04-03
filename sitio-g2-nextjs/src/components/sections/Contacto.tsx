@@ -6,6 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
+import { ContactSchema } from '@/lib/schemas';
 
 interface ContactoProps {
   onScheduleClick: () => void;
@@ -54,15 +56,51 @@ export default function Contacto({ onScheduleClick }: ContactoProps) {
     mensaje: '',
   });
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Client-side validation (per FORM-03, FORM-04)
+    const validation = ContactSchema.safeParse(formData);
+    if (!validation.success) {
+      const fieldErrors: Record<string, string> = {};
+      validation.error.issues.forEach((issue) => {
+        const field = issue.path[0] as string;
+        if (!fieldErrors[field]) fieldErrors[field] = issue.message;
+      });
+      setErrors(fieldErrors);
+      return;
+    }
+
+    setErrors({});
     setLoading(true);
-    // Phase 1 stub: log form data only. Real webhook integration in Phase 3.
-    console.log('Form submission (stub):', formData);
-    await new Promise((r) => setTimeout(r, 500));
-    setLoading(false);
-    setFormData({ nombre: '', email: '', empresa: '', mensaje: '' });
+
+    try {
+      // POST to API route — never direct to n8n (per FORM-05)
+      const response = await fetch('/api/webhook/n8n/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(validation.data),
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        if (response.status === 429) {
+          toast.error('Demasiados intentos. Intenta de nuevo en unos minutos.');
+        } else {
+          toast.error((data as { error?: string }).error ?? 'Error al enviar. Intenta de nuevo.');
+        }
+        return;
+      }
+
+      toast.success('¡Mensaje enviado! Te contactaremos pronto.');
+      setFormData({ nombre: '', email: '', empresa: '', mensaje: '' });
+    } catch {
+      toast.error('Error de conexión. Intenta de nuevo.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -103,6 +141,9 @@ export default function Contacto({ onScheduleClick }: ContactoProps) {
                   onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
                   className="bg-[#0d1117] border-white/10 text-white placeholder:text-white/30 focus:border-emerald-500/50"
                 />
+                {errors.nombre && (
+                  <p className="text-red-400 text-xs mt-1">{errors.nombre}</p>
+                )}
               </div>
 
               <div className="space-y-1.5">
@@ -118,6 +159,9 @@ export default function Contacto({ onScheduleClick }: ContactoProps) {
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   className="bg-[#0d1117] border-white/10 text-white placeholder:text-white/30 focus:border-emerald-500/50"
                 />
+                {errors.email && (
+                  <p className="text-red-400 text-xs mt-1">{errors.email}</p>
+                )}
               </div>
 
               <div className="space-y-1.5">
@@ -131,6 +175,9 @@ export default function Contacto({ onScheduleClick }: ContactoProps) {
                   onChange={(e) => setFormData({ ...formData, empresa: e.target.value })}
                   className="bg-[#0d1117] border-white/10 text-white placeholder:text-white/30 focus:border-emerald-500/50"
                 />
+                {errors.empresa && (
+                  <p className="text-red-400 text-xs mt-1">{errors.empresa}</p>
+                )}
               </div>
 
               <div className="space-y-1.5">
@@ -146,6 +193,9 @@ export default function Contacto({ onScheduleClick }: ContactoProps) {
                   onChange={(e) => setFormData({ ...formData, mensaje: e.target.value })}
                   className="bg-[#0d1117] border-white/10 text-white placeholder:text-white/30 focus:border-emerald-500/50 resize-none"
                 />
+                {errors.mensaje && (
+                  <p className="text-red-400 text-xs mt-1">{errors.mensaje}</p>
+                )}
               </div>
 
               <Button

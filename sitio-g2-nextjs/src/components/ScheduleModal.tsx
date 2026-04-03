@@ -13,6 +13,7 @@ import { Calendar as CalendarIcon, Clock, User, Mail, Phone, Loader2, Sparkles }
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { cn } from "@/lib/utils";
+import { ScheduleSchema } from "@/lib/schemas";
 
 interface ScheduleModalProps {
     isOpen: boolean;
@@ -49,6 +50,7 @@ export const ScheduleModal = ({ isOpen, onClose }: ScheduleModalProps) => {
     const [date, setDate] = useState<Date | undefined>(availableDays[0]);
     const [selectedTime, setSelectedTime] = useState<string>("10:00");
     const [loading, setLoading] = useState(false);
+    const [errors, setErrors] = useState<Record<string, string>>({});
     const [formData, setFormData] = useState({
         nombre: '',
         email: '',
@@ -83,27 +85,42 @@ export const ScheduleModal = ({ isOpen, onClose }: ScheduleModalProps) => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        // Client-side Zod validation (per FORM-03, FORM-04)
+        const validation = ScheduleSchema.safeParse({
+            nombre: formData.nombre,
+            email: formData.email,
+            telefono: formData.telefono,
+            fecha: date ? date.toISOString() : '',
+            hora: selectedTime,
+        });
+        if (!validation.success) {
+            const fieldErrors: Record<string, string> = {};
+            validation.error.issues.forEach((issue) => {
+                const field = issue.path[0] as string;
+                if (!fieldErrors[field]) fieldErrors[field] = issue.message;
+            });
+            setErrors(fieldErrors);
+            return;
+        }
+        setErrors({});
+
+        // Preserve existing localStorage rate limit check
         if (!checkRateLimit()) return;
-        if (!date) return toast.error("Selecciona un día.");
+        if (!date) return toast.error('Selecciona un día.');
 
         setLoading(true);
         try {
-            const webhookUrl = process.env.NEXT_PUBLIC_N8N_CHAT_WEBHOOK_URL;
-            if (!webhookUrl) {
-                throw new Error('NEXT_PUBLIC_N8N_CHAT_WEBHOOK_URL is not configured');
-            }
-
-            const response = await fetch(webhookUrl, {
+            // POST to API route — never direct to n8n (per FORM-05)
+            const response = await fetch('/api/webhook/n8n/schedule', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    type: 'scheduling',
-                    ...formData,
+                    nombre: validation.data.nombre,
+                    email: validation.data.email,
+                    telefono: validation.data.telefono,
                     fecha: format(date, "PPP", { locale: es }),
                     hora: selectedTime,
-                    timestamp: new Date().toISOString()
                 }),
             });
 
@@ -112,9 +129,14 @@ export const ScheduleModal = ({ isOpen, onClose }: ScheduleModalProps) => {
                 localStorage.setItem(COOLDOWN_KEY, Date.now().toString());
                 onClose();
             } else {
-                throw new Error();
+                const data = await response.json().catch(() => ({}));
+                if (response.status === 429) {
+                    toast.error('Demasiados intentos. Espera unos minutos.');
+                } else {
+                    throw new Error((data as { error?: string }).error ?? 'server error');
+                }
             }
-        } catch (error) {
+        } catch {
             toast.error("Error al agendar. Intenta de nuevo.");
         } finally {
             setLoading(false);
@@ -160,6 +182,9 @@ export const ScheduleModal = ({ isOpen, onClose }: ScheduleModalProps) => {
                                             className="pl-10 bg-white/5 border-white/10 h-11 rounded-xl"
                                         />
                                     </div>
+                                    {errors.nombre && (
+                                        <p className="text-red-400 text-xs mt-1">{errors.nombre}</p>
+                                    )}
                                 </div>
                                 <div className="space-y-1.5">
                                     <Label className="text-[10px] uppercase tracking-widest text-white/30 font-bold">Email Corporativo</Label>
@@ -174,6 +199,9 @@ export const ScheduleModal = ({ isOpen, onClose }: ScheduleModalProps) => {
                                             className="pl-10 bg-white/5 border-white/10 h-11 rounded-xl"
                                         />
                                     </div>
+                                    {errors.email && (
+                                        <p className="text-red-400 text-xs mt-1">{errors.email}</p>
+                                    )}
                                 </div>
                                 <div className="space-y-1.5">
                                     <Label className="text-[10px] uppercase tracking-widest text-white/30 font-bold">Teléfono / WhatsApp</Label>
@@ -188,6 +216,9 @@ export const ScheduleModal = ({ isOpen, onClose }: ScheduleModalProps) => {
                                             className="pl-10 bg-white/5 border-white/10 h-11 rounded-xl"
                                         />
                                     </div>
+                                    {errors.telefono && (
+                                        <p className="text-red-400 text-xs mt-1">{errors.telefono}</p>
+                                    )}
                                 </div>
                             </div>
 

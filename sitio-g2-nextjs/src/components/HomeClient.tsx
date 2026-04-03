@@ -9,6 +9,7 @@ import Equipo from '@/components/sections/Equipo';
 import Contacto from '@/components/sections/Contacto';
 import Footer from '@/components/sections/Footer';
 import ScheduleModal from '@/components/ScheduleModal';
+import ChatWidgetWrapper from '@/components/ChatWidgetWrapper';
 
 export default function HomeClient() {
   const [isScheduleOpen, setIsScheduleOpen] = useState(false);
@@ -28,6 +29,7 @@ export default function HomeClient() {
         isOpen={isScheduleOpen}
         onClose={() => setIsScheduleOpen(false)}
       />
+      <ChatWidgetWrapper />
     </>
   );
 }

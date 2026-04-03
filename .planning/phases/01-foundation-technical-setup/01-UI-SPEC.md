@@ -54,18 +54,21 @@ Exceptions: Touch targets (buttons, form inputs) minimum 44px (mobile accessibil
 | Role | Size | Weight | Line Height | Usage |
 |------|------|--------|-------------|-------|
 | Body | 16px | 400 (Regular) | 1.5 | Paragraph text, service descriptions |
-| Label | 14px | 500 (Medium) | 1.4 | Form labels, small UI text |
+| Label | 14px | 400 (Regular) | 1.4 | Form labels, small UI text |
 | Heading H2 | 20px | 600 (Semibold) | 1.2 | Section headings (Servicios, Nosotros, Equipo) |
 | Heading H1 | 28px | 600 (Semibold) | 1.2 | Hero headline, page title |
-| Display | 36px | 700 (Bold) | 1.1 | Rare; hero main statement (optional, use 28px H1 default) |
 
 Font family:
 - **Sans-serif (default):** Inter (UI, body, headings)
 - **Monospace (technical):** Roboto Mono (code snippets, feature lists with monospace accents)
 
+Font weights:
+- **400 (Regular):** Body text, labels, default UI text
+- **600 (Semibold):** All headings (H1, H2), emphasis within body text
+
 Loading strategy: Both fonts loaded via `next/font/google` with `display: 'swap'` to prevent FOUT (Flash of Unstyled Text).
 
-**Source:** Emerald Intelligence philosophy + research recommendation for B2B consulting (conservative, professional). PERF-04 requires next/font usage.
+**Source:** Emerald Intelligence philosophy + research recommendation for B2B consulting (conservative, professional, typographic restraint). PERF-04 requires next/font usage. Font weight limit: 2 weights maximum (400 Regular + 600 Semibold).
 
 ---
 
@@ -313,7 +316,7 @@ UI-SPEC does not define env vars, but implementer must ensure these are configur
 - [ ] Dimension 1 Copywriting: PASS (Spanish, specific, action-oriented)
 - [ ] Dimension 2 Visuals: PASS (Emerald Intelligence philosophy, premium aesthetic)
 - [ ] Dimension 3 Color: PASS (60/30/10 split, accent reserved for CTAs + focus)
-- [ ] Dimension 4 Typography: PASS (Inter + Roboto Mono, 4-role system, 1.5 body line-height)
+- [ ] Dimension 4 Typography: PASS (Inter + Roboto Mono, 2 font weights only: 400 Regular + 600 Semibold, 1.5 body line-height)
 - [ ] Dimension 5 Spacing: PASS (8-point scale, 44px touch targets, section breathing room)
 - [ ] Dimension 6 Registry Safety: PASS (shadcn official preset, no third-party blocks)
 
@@ -346,6 +349,7 @@ UI-SPEC does not define env vars, but implementer must ensure these are configur
 ---
 
 *UI-SPEC created: 2026-04-03*
+*UI-SPEC revised: 2026-04-03 (typography font weights corrected to 2 weights maximum)*
 *Phase: 1 - Foundation & Technical Setup*
 *Design System: shadcn/ui (new-york preset, Next.js 15 App Router)*
 *Status: Draft (pending gsd-ui-checker approval)*

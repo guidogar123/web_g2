@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
 import HomeClient from '@/components/HomeClient';
 
+// ISR: revalidate the home page at most once per hour
+export const revalidate = 3600;
+
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'G2 Intelligence — Inteligencia Artificial para Ventas y Automatización en Cali',

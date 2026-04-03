@@ -66,7 +66,10 @@ Plans:
 5. Open Graph tags (og:title, og:description, og:image) are present for social media previews
 6. Twitter Card tags are present; sharing a link to site on social media shows correct title, description, and image
 
-**Plans:** TBD
+**Plans:** 1 plan
+
+Plans:
+- [ ] 02-01-PLAN.md — Enhance layout.tsx metadata + JSON-LD schemas, add generateMetadata to page.tsx, create sitemap.ts, robots.ts, opengraph-image.tsx
 
 **UI hint:** yes
 
@@ -139,7 +142,7 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Technical Setup | 0/1 | Not started | — |
-| 2. Local SEO & Metadata Optimization | 0/? | Not started | — |
+| 2. Local SEO & Metadata Optimization | 0/1 | Not started | — |
 | 3. Forms & Integration | 0/? | Not started | — |
 | 4. Chat Widget & Integration | 0/? | Not started | — |
 | 5. Performance & Launch Validation | 0/? | Not started | — |

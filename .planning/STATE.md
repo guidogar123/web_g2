@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 04-chat-widget-integration/04-01-PLAN.md
-last_updated: "2026-04-03T23:47:31.473Z"
+stopped_at: Completed 05-performance-launch-validation/05-01-PLAN.md
+last_updated: "2026-04-04T00:00:54.579Z"
 progress:
   total_phases: 5
-  completed_phases: 4
-  total_plans: 4
-  completed_plans: 4
+  completed_phases: 5
+  total_plans: 5
+  completed_plans: 5
 ---
 
 # G2 Intelligence — Project State
@@ -233,6 +233,8 @@ await new Promise((resolve) => setTimeout(resolve, 1500));
 - [Phase 03]: N8N_WEBHOOK_URL is server-only, exposed only in API routes — never in client components
 - [Phase 04-chat-widget-integration]: dynamic(ssr:false) wrapper pattern for @n8n/chat: required to prevent window-is-undefined SSR errors; must be inside 'use client' component per Next.js 16.2.2 docs
 - [Phase 04-chat-widget-integration]: @n8n/chat webhook URL exclusively via NEXT_PUBLIC_N8N_CHAT_WEBHOOK_URL env var — graceful degradation (warn+return) when absent
+- [Phase 05-performance-launch-validation]: export const revalidate = 3600 is valid in Next.js 16.2.2 when cacheComponents is NOT enabled — old ISR model preserved
+- [Phase 05-performance-launch-validation]: Vercel deployment deferred to human action — CLI requires browser OAuth; deploy runbook documented in 05-01-SUMMARY.md
 
 ## Accumulated Context
 
@@ -313,7 +315,7 @@ await new Promise((resolve) => setTimeout(resolve, 1500));
 - Phase 3: Forms & Integration (6 requirements: FORM-01 through FORM-06)
 - Key scope: Fix simulated contact form, connect to n8n webhook, rate limiting, input validation
 
-**Stopped at:** Completed 04-chat-widget-integration/04-01-PLAN.md
+**Stopped at:** Completed 05-performance-launch-validation/05-01-PLAN.md
 
 **If Session Lost:**
 

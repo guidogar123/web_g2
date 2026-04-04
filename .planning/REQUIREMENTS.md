@@ -10,7 +10,7 @@
 - [ ] **MIGR-01**: El sitio funciona como aplicación Next.js 15 App Router (reemplazando React SPA + Vite)
 - [ ] **MIGR-02**: Todas las secciones existentes están presentes: Hero, Servicios, Nosotros, Equipo, Contacto, Footer
 - [ ] **MIGR-03**: Las URLs de webhook n8n están almacenadas en variables de entorno `.env.local`, no hardcodeadas
-- [ ] **MIGR-04**: El sitio se despliega correctamente en Vercel con dominio g2intelligence.co
+- [x] **MIGR-04**: El sitio se despliega correctamente en Vercel con dominio g2intelligence.co
 
 ### SEO Técnico
 
@@ -46,8 +46,8 @@
 
 ### Performance
 
-- [ ] **PERF-01**: LCP (Largest Contentful Paint) < 2.5s medido en PageSpeed Insights
-- [ ] **PERF-02**: CLS (Cumulative Layout Shift) < 0.1 (sin saltos de layout al cargar)
+- [x] **PERF-01**: LCP (Largest Contentful Paint) < 2.5s medido en PageSpeed Insights
+- [x] **PERF-02**: CLS (Cumulative Layout Shift) < 0.1 (sin saltos de layout al cargar)
 - [ ] **PERF-03**: Todas las imágenes se sirven con `next/image` en formato WebP/AVIF con dimensiones declaradas
 - [ ] **PERF-04**: Fuentes Inter y Roboto Mono se cargan con `next/font` para eliminar FOUT
 
@@ -89,7 +89,7 @@
 | MIGR-01 | Phase 1 | Pending |
 | MIGR-02 | Phase 1 | Pending |
 | MIGR-03 | Phase 1 | Pending |
-| MIGR-04 | Phase 5 | Pending |
+| MIGR-04 | Phase 5 | Complete |
 | SEO-01 | Phase 2 | Pending |
 | SEO-02 | Phase 2 | Pending |
 | SEO-03 | Phase 2 | Pending |
@@ -110,8 +110,8 @@
 | UI-02 | Phase 1 | Pending |
 | UI-03 | Phase 1 | Pending |
 | UI-04 | Phase 2 | Pending |
-| PERF-01 | Phase 5 | Pending |
-| PERF-02 | Phase 5 | Pending |
+| PERF-01 | Phase 5 | Complete |
+| PERF-02 | Phase 5 | Complete |
 | PERF-03 | Phase 1 | Pending |
 | PERF-04 | Phase 1 | Pending |
 

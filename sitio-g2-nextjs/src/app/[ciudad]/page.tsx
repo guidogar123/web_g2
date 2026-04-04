@@ -3,6 +3,9 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { CITIES, CITY_SLUGS, getCityBySlug } from './cities';
 
+export const dynamic = 'force-static';
+export const dynamicParams = false;
+
 interface Props {
   params: Promise<{ ciudad: string }>;
 }

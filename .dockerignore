@@ -1,0 +1,13 @@
+.planning/
+sitio-g2/
+G2_Social_Media_Kit/
+G2_Social_Media_Kit.zip
+Kimi_Agent_Diseño web G2Intelligence/
+G2 Scheduling Workflow
+.claude/
+.continue-here.md
+sitio-g2-nextjs/.next/
+sitio-g2-nextjs/node_modules/
+sitio-g2-nextjs/.env.local
+sitio-g2-nextjs/.vercel/
+*.md

@@ -1,45 +1,58 @@
 {
   "version": "1.0",
-  "timestamp": "2026-04-03T21:55:20.437Z",
-  "phase": null,
-  "phase_name": "Project Initialization Complete",
-  "phase_dir": null,
-  "plan": null,
-  "task": null,
-  "total_tasks": null,
-  "status": "ready_for_phase_1",
+  "timestamp": "2026-04-04T01:12:10.863Z",
+  "phase": "05",
+  "phase_name": "performance-launch-validation",
+  "phase_dir": ".planning/phases/05-performance-launch-validation",
+  "plan": 1,
+  "task": 9,
+  "total_tasks": 15,
+  "status": "paused",
   "completed_tasks": [
-    {"id": 1, "name": "Deep questioning — gathered all project context", "status": "done"},
-    {"id": 2, "name": "Created PROJECT.md with requirements, constraints, decisions", "status": "done", "commit": "859b897"},
-    {"id": 3, "name": "Configured workflow — YOLO, Coarse, Budget models, Research+PlanCheck+Verifier ON", "status": "done", "commit": "04a4d4e"},
-    {"id": 4, "name": "Research — 4 parallel agents: Stack, Features, Architecture, Pitfalls", "status": "done"},
-    {"id": 5, "name": "Research synthesized into SUMMARY.md", "status": "done", "commit": "5e66011"},
-    {"id": 6, "name": "Defined 28 v1 requirements across 6 categories in REQUIREMENTS.md", "status": "done", "commit": "9d458b4"},
-    {"id": 7, "name": "Created 5-phase ROADMAP.md + STATE.md (28/28 requirements mapped)", "status": "done", "commit": "52f53f1"}
+    {"id": 1, "name": "Build Dockerfile for EasyPanel standalone Next.js", "status": "done", "commit": "23abc5e"},
+    {"id": 2, "name": "Embed NEXT_PUBLIC webhook URL in builder ENV", "status": "done", "commit": "72f295a"},
+    {"id": 3, "name": "Commit public/ SVG assets (were missing, broke Docker build)", "status": "done", "commit": "b2462aa"},
+    {"id": 4, "name": "Fix Dockerfile PORT from 3000 to 80 (Traefik routing)", "status": "done", "commit": "d219816"},
+    {"id": 5, "name": "Build Docker image on EasyPanel VPS from GitHub repo", "status": "done", "commit": null},
+    {"id": 6, "name": "Force-update Docker Swarm service posgresql_web_g2", "status": "done", "commit": null},
+    {"id": 7, "name": "Diagnose DNS mismatch: old server 72.62.87.218 vs VPS 82.25.86.23", "status": "done", "commit": null},
+    {"id": 8, "name": "User updated DNS A record to 82.25.86.23", "status": "done", "commit": null}
   ],
   "remaining_tasks": [
-    {"id": 8, "name": "Phase 1: Foundation & Technical Setup", "status": "not_started"},
-    {"id": 9, "name": "Phase 2: Local SEO & Metadata Optimization", "status": "not_started"},
-    {"id": 10, "name": "Phase 3: Forms & Integration (fix contact form bug)", "status": "not_started"},
-    {"id": 11, "name": "Phase 4: Chat Widget (n8n SSR migration)", "status": "not_started"},
-    {"id": 12, "name": "Phase 5: Performance & Launch", "status": "not_started"}
+    {"id": 9, "name": "Verify site renders correctly after browser DNS cache cleared", "status": "in_progress"},
+    {"id": 10, "name": "Confirm visual parity with Vercel reference (h1 sizing, layout)", "status": "not_started"},
+    {"id": 11, "name": "Run Lighthouse / Core Web Vitals on production", "status": "not_started"},
+    {"id": 12, "name": "Verify n8n contact form end-to-end on production", "status": "not_started"},
+    {"id": 13, "name": "Verify n8n schedule form end-to-end on production", "status": "not_started"},
+    {"id": 14, "name": "Verify chat widget appears and connects to n8n on production", "status": "not_started"},
+    {"id": 15, "name": "Set up EasyPanel auto-deploy from GitHub webhook", "status": "not_started"}
   ],
-  "blockers": [],
+  "blockers": [
+    {
+      "description": "User and MCP browser DNS still resolves g2intelligence.co to old server 72.62.87.218",
+      "type": "human_action",
+      "workaround": "Open chrome://net-internals/#dns → Clear host cache. Or use incognito. Google DNS already shows 82.25.86.23 correctly."
+    }
+  ],
   "human_actions_pending": [
     {
-      "action": "Antes de ejecutar Phase 5: configurar variables de entorno en Vercel dashboard",
-      "context": "NEXT_PUBLIC_N8N_CHAT_WEBHOOK_URL y N8N_WEBHOOK_URL deben estar en Vercel env vars antes del deploy",
+      "action": "Clear Chrome DNS cache: chrome://net-internals/#dns → Clear host cache, then chrome://net-internals/#sockets → Flush socket pools. Then reload g2intelligence.co",
+      "context": "Browser hitting old nginx (72.62.87.218). Google/external DNS already propagated to 82.25.86.23 (EasyPanel VPS). Server-side confirmed correct.",
+      "blocking": true
+    },
+    {
+      "action": "Set up GitHub webhook in EasyPanel for auto-deploy on git push",
+      "context": "Currently requires manual SSH + docker build. EasyPanel has GitHub integration for auto-deploy.",
       "blocking": false
     }
   ],
   "decisions": [
-    {"decision": "Migrar React SPA → Next.js 15 App Router", "rationale": "SEO técnico requiere SSR/SSG; SPAs no se indexan bien en Google", "phase": "1"},
-    {"decision": "Usar Stitch MCP para regenerar UI desde cero", "rationale": "Usuario eligió esta herramienta para nuevo diseño con identidad Emerald Intelligence", "phase": "1"},
-    {"decision": "Conectar formulario de contacto al mismo webhook n8n", "rationale": "Infraestructura ya existe; evita nueva dependencia; tipo 'contact' diferencia del scheduling", "phase": "3"},
-    {"decision": "Desplegar en Vercel", "rationale": "Zero-config Next.js, CDN global, tier free suficiente para lanzar", "phase": "5"},
-    {"decision": "Sin blog/CMS en v1", "rationale": "Reduce scope; SEO inicial se logra con páginas de servicios bien optimizadas", "phase": null}
+    {"decision": "Deploy via Docker image built on VPS via SSH, NOT EasyPanel UI", "rationale": "EasyPanel API requires password (401). SSH + manual docker build was the viable path.", "phase": "05"},
+    {"decision": "PORT=80 in Dockerfile", "rationale": "Traefik routes g2intelligence.co → posgresql_web_g2:80. Next.js standalone respects PORT env.", "phase": "05"},
+    {"decision": "Image tag: easypanel/posgresql/web_g2:latest", "rationale": "Matches EasyPanel naming convention for the posgresql project / web_g2 service.", "phase": "05"},
+    {"decision": "NEXT_PUBLIC_N8N_CHAT_WEBHOOK_URL hardcoded in Dockerfile ENV", "rationale": "NEXT_PUBLIC vars baked into client bundle at build time — ENV in builder stage is acceptable.", "phase": "05"}
   ],
-  "uncommitted_files": [],
-  "next_action": "Run /gsd:plan-phase 1 to plan and execute Phase 1: Foundation & Technical Setup",
-  "context_notes": "Proyecto completamente inicializado. El sitio actual (React SPA) está en 'Kimi_Agent_Diseño web G2Intelligence/app/'. La fuente compilada está en 'sitio-g2/'. El bug crítico del formulario de contacto está en Contacto.tsx líneas 70-72 (simulación con setTimeout). El webhook n8n está hardcodeado — debe moverse a .env.local en Phase 1. Stitch MCP se usa para regenerar el diseño visual en Phase 1."
+  "uncommitted_files": ["sitio-g2-nextjs/.gitignore (M)"],
+  "next_action": "1. User clears Chrome DNS cache (chrome://net-internals/#dns). 2. Reload g2intelligence.co — title should say 'G2 Intelligence — Inteligencia Artificial para Ventas y Automatización en Cali'. 3. Run Lighthouse audit. 4. Test forms and chat widget.",
+  "context_notes": "VPS: 82.25.86.23, SSH alias: easypanel-vps. Swarm service: posgresql_web_g2. Build dir: /tmp/web_g2_build. Traefik config: /etc/easypanel/traefik/config/main.yaml. Container at pause: 2c3bc510ccbc. Image: easypanel/posgresql/web_g2:latest. Container confirmed serving correct Next.js HTML on port 80 internally. External DNS propagated. Only browser DNS cache blocking full verification."
 }

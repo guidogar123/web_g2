@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const city = getCityBySlug(ciudad);
   if (!city) return {};
 
-  const title = `Inteligencia Artificial para Ventas en ${city.name} | G2 Intelligence`;
+  const title = `Inteligencia Artificial para Ventas en ${city.name}`;
   const description = `G2 Intelligence ofrece soluciones de IA, automatización de procesos y agentes inteligentes para empresas en ${city.name}, ${city.department}. Aumenta tus ventas y eficiencia con tecnología agentica.`;
 
   return {

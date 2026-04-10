@@ -22,7 +22,7 @@ const footerLinks = [
   {
     heading: 'Legal',
     links: [
-      { label: 'Política de Privacidad', href: '#' },
+      { label: 'Política de Privacidad', href: '/politica-privacidad' },
       { label: 'Términos de Servicio', href: '#' },
       { label: 'Política de Cookies', href: '#' },
     ],

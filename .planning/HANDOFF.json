@@ -1,58 +1,56 @@
 {
   "version": "1.0",
-  "timestamp": "2026-04-04T01:12:10.863Z",
+  "timestamp": "2026-04-04T13:16:21.571Z",
   "phase": "05",
   "phase_name": "performance-launch-validation",
   "phase_dir": ".planning/phases/05-performance-launch-validation",
   "plan": 1,
-  "task": 9,
+  "task": 15,
   "total_tasks": 15,
-  "status": "paused",
+  "status": "complete",
   "completed_tasks": [
-    {"id": 1, "name": "Build Dockerfile for EasyPanel standalone Next.js", "status": "done", "commit": "23abc5e"},
-    {"id": 2, "name": "Embed NEXT_PUBLIC webhook URL in builder ENV", "status": "done", "commit": "72f295a"},
-    {"id": 3, "name": "Commit public/ SVG assets (were missing, broke Docker build)", "status": "done", "commit": "b2462aa"},
-    {"id": 4, "name": "Fix Dockerfile PORT from 3000 to 80 (Traefik routing)", "status": "done", "commit": "d219816"},
-    {"id": 5, "name": "Build Docker image on EasyPanel VPS from GitHub repo", "status": "done", "commit": null},
-    {"id": 6, "name": "Force-update Docker Swarm service posgresql_web_g2", "status": "done", "commit": null},
-    {"id": 7, "name": "Diagnose DNS mismatch: old server 72.62.87.218 vs VPS 82.25.86.23", "status": "done", "commit": null},
-    {"id": 8, "name": "User updated DNS A record to 82.25.86.23", "status": "done", "commit": null}
+    {"id": 1, "name": "Add ISR + production build", "status": "done", "commit": "bffc58d"},
+    {"id": 2, "name": "EasyPanel Docker deployment", "status": "done", "commit": "d219816"},
+    {"id": 3, "name": "DNS cutover to VPS", "status": "done", "commit": null},
+    {"id": 4, "name": "Traefik routing fix (port 80)", "status": "done", "commit": "d219816"},
+    {"id": 5, "name": "www → non-www 301 redirect", "status": "done", "commit": "506bc51"},
+    {"id": 6, "name": "Public assets committed", "status": "done", "commit": "b2462aa"},
+    {"id": 7, "name": "NEXT_PUBLIC webhook URL in Dockerfile", "status": "done", "commit": "72f295a"},
+    {"id": 8, "name": "EasyPanel deploy verified live", "status": "done", "commit": null},
+    {"id": 9, "name": "Site verified correct HTML at g2intelligence.co", "status": "done", "commit": null},
+    {"id": 10, "name": "Visual parity confirmed", "status": "done", "commit": null},
+    {"id": 11, "name": "Lighthouse 95/91/100/100", "status": "done", "commit": null},
+    {"id": 12, "name": "Contact form → n8n end-to-end", "status": "done", "commit": null},
+    {"id": 13, "name": "Schedule modal → n8n end-to-end", "status": "done", "commit": null},
+    {"id": 14, "name": "Chat widget → n8n connected", "status": "done", "commit": null},
+    {"id": 15, "name": "15 city SEO landing pages + redeploy verified", "status": "done", "commit": "06b4e4f"}
   ],
   "remaining_tasks": [
-    {"id": 9, "name": "Verify site renders correctly after browser DNS cache cleared", "status": "in_progress"},
-    {"id": 10, "name": "Confirm visual parity with Vercel reference (h1 sizing, layout)", "status": "not_started"},
-    {"id": 11, "name": "Run Lighthouse / Core Web Vitals on production", "status": "not_started"},
-    {"id": 12, "name": "Verify n8n contact form end-to-end on production", "status": "not_started"},
-    {"id": 13, "name": "Verify n8n schedule form end-to-end on production", "status": "not_started"},
-    {"id": 14, "name": "Verify chat widget appears and connects to n8n on production", "status": "not_started"},
-    {"id": 15, "name": "Set up EasyPanel auto-deploy from GitHub webhook", "status": "not_started"}
+    {"id": "15b", "name": "EasyPanel auto-deploy from GitHub webhook", "status": "deferred_by_user"}
   ],
-  "blockers": [
-    {
-      "description": "User and MCP browser DNS still resolves g2intelligence.co to old server 72.62.87.218",
-      "type": "human_action",
-      "workaround": "Open chrome://net-internals/#dns → Clear host cache. Or use incognito. Google DNS already shows 82.25.86.23 correctly."
-    }
-  ],
+  "blockers": [],
   "human_actions_pending": [
     {
-      "action": "Clear Chrome DNS cache: chrome://net-internals/#dns → Clear host cache, then chrome://net-internals/#sockets → Flush socket pools. Then reload g2intelligence.co",
-      "context": "Browser hitting old nginx (72.62.87.218). Google/external DNS already propagated to 82.25.86.23 (EasyPanel VPS). Server-side confirmed correct.",
-      "blocking": true
+      "action": "Set up GitHub webhook in EasyPanel for auto-deploy",
+      "context": "Every code push currently requires manual redeploy in EasyPanel dashboard. EasyPanel → service → Deploy → copy webhook URL → GitHub repo Settings → Webhooks → push event.",
+      "blocking": false
     },
     {
-      "action": "Set up GitHub webhook in EasyPanel for auto-deploy on git push",
-      "context": "Currently requires manual SSH + docker build. EasyPanel has GitHub integration for auto-deploy.",
+      "action": "Submit 15 city URLs to Google Search Console",
+      "context": "New pages need submission for faster indexing: /bogota /medellin /cali /barranquilla /cartagena /bucaramanga /pereira /manizales /ibague /santa-marta /cucuta /villavicencio /armenia /pasto /monteria",
       "blocking": false
     }
   ],
   "decisions": [
-    {"decision": "Deploy via Docker image built on VPS via SSH, NOT EasyPanel UI", "rationale": "EasyPanel API requires password (401). SSH + manual docker build was the viable path.", "phase": "05"},
-    {"decision": "PORT=80 in Dockerfile", "rationale": "Traefik routes g2intelligence.co → posgresql_web_g2:80. Next.js standalone respects PORT env.", "phase": "05"},
-    {"decision": "Image tag: easypanel/posgresql/web_g2:latest", "rationale": "Matches EasyPanel naming convention for the posgresql project / web_g2 service.", "phase": "05"},
-    {"decision": "NEXT_PUBLIC_N8N_CHAT_WEBHOOK_URL hardcoded in Dockerfile ENV", "rationale": "NEXT_PUBLIC vars baked into client bundle at build time — ENV in builder stage is acceptable.", "phase": "05"}
+    {"decision": "Deployment on EasyPanel VPS instead of Vercel", "rationale": "User explicit preference", "phase": "05"},
+    {"decision": "15 city SSG landing pages for local SEO", "rationale": "Site not ranking for 'inteligencia artificial para ventas [Ciudad]' queries", "phase": "05"},
+    {"decision": "dynamicParams = false on city pages", "rationale": "Only pre-generated slugs should resolve; unknown slugs 404", "phase": "05"},
+    {"decision": "www redirect via Next.js redirects() not Traefik", "rationale": "EasyPanel manages Traefik config — avoid touching it", "phase": "05"},
+    {"decision": "City page title: omit '| G2 Intelligence' — root layout template appends it", "rationale": "Fixed duplicate title bug (was '...| G2 Intelligence | G2 Intelligence')", "phase": "05"}
   ],
-  "uncommitted_files": ["sitio-g2-nextjs/.gitignore (M)"],
-  "next_action": "1. User clears Chrome DNS cache (chrome://net-internals/#dns). 2. Reload g2intelligence.co — title should say 'G2 Intelligence — Inteligencia Artificial para Ventas y Automatización en Cali'. 3. Run Lighthouse audit. 4. Test forms and chat widget.",
-  "context_notes": "VPS: 82.25.86.23, SSH alias: easypanel-vps. Swarm service: posgresql_web_g2. Build dir: /tmp/web_g2_build. Traefik config: /etc/easypanel/traefik/config/main.yaml. Container at pause: 2c3bc510ccbc. Image: easypanel/posgresql/web_g2:latest. Container confirmed serving correct Next.js HTML on port 80 internally. External DNS propagated. Only browser DNS cache blocking full verification."
+  "uncommitted_files": [
+    "sitio-g2-nextjs/.gitignore (minor — adds .vercel entry, cosmetic, not blocking)"
+  ],
+  "next_action": "Set up GitHub webhook auto-deploy in EasyPanel (task 15b). Otherwise project is complete — consider Google Search Console submission for city URLs.",
+  "context_notes": "Phase 5 is the final phase. Project functionally complete. Site live at g2intelligence.co with 15 city SEO pages. Only operational gap is manual EasyPanel redeploy after each push."
 }

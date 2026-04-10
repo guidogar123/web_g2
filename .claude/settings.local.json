@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx serve:*)",
+      "Bash(npm run:*)",
+      "Bash(ssh -i C:/Users/guido/.ssh/hostinger_vps_ed25519 root@72.62.87.218 \"ls /var/www/ && nginx -t 2>&1 && cat /etc/nginx/sites-enabled/* 2>/dev/null || cat /etc/nginx/conf.d/*.conf 2>/dev/null\")",
+      "Bash(nslookup g2intelligence.co)",
+      "Bash(nslookup www.g2intelligence.co)",
+      "Bash(scp -i C:/Users/guido/.ssh/hostinger_vps_ed25519 -r \"c:/Users/guido/OneDrive/G2INNOVATION/WEB_G2/Kimi_Agent_Diseño web G2Intelligence/app/dist/.\" root@72.62.87.218:/var/www/g2intelligence)",
+      "Bash(ssh -i C:/Users/guido/.ssh/hostinger_vps_ed25519 root@72.62.87.218 \"ls -la /var/www/g2intelligence/\")",
+      "Bash(ssh -i C:/Users/guido/.ssh/hostinger_vps_ed25519 root@72.62.87.218 \"ln -sf /etc/nginx/sites-available/g2intelligence /etc/nginx/sites-enabled/g2intelligence && nginx -t 2>&1\")",
+      "Bash(ssh -i C:/Users/guido/.ssh/hostinger_vps_ed25519 root@72.62.87.218 \"systemctl reload nginx\")",
+      "Bash(ssh -i C:/Users/guido/.ssh/hostinger_vps_ed25519 root@72.62.87.218 \"certbot --nginx -d g2intelligence.co -d www.g2intelligence.co --non-interactive --agree-tos --email guido@g2intelligence.co\")",
+      "Read(//c/Users/guido/OneDrive/G2INNOVATION/OBSIDIAN/**)",
+      "Read(//c/Users/guido/ObsidianVaults/**)",
+      "Read(//c/Users/guido/Documents/**)",
+      "Read(//c/Users/guido/**)",
+      "WebFetch(domain:g2intelligence.co)",
+      "WebFetch(domain:consultoresia.com)",
+      "WebFetch(domain:automaxia.com)",
+      "WebFetch(domain:stitch.withgoogle.com)",
+      "WebFetch(domain:github.com)",
+      "Skill(gsd:map-codebase)",
+      "Skill(gsd:map-codebase:*)",
+      "Bash(npx @_davideast/stitch-mcp proxy --help)",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('mcpServers', {}\\), indent=2\\)\\)\")",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('mcpServers', 'NO mcpServers key'\\), indent=2\\)\\)\")",
+      "Bash(wc -l .planning/codebase/*.md)",
+      "Bash(find /c/Users/guido/OneDrive/G2INNOVATION/WEB_G2 -name package.json -not -path */node_modules/*)",
+      "Bash(node \"$HOME/.claude/get-shit-done/bin/gsd-tools.cjs\" commit \"docs: map existing codebase\" --files \".planning/codebase/STACK.md .planning/codebase/INTEGRATIONS.md .planning/codebase/ARCHITECTURE.md .planning/codebase/STRUCTURE.md .planning/codebase/CONVENTIONS.md .planning/codebase/TESTING.md .planning/codebase/CONCERNS.md\")",
+      "Bash(node \"$HOME/.claude/get-shit-done/bin/gsd-tools.cjs\" commit \"docs: initialize project\" --files .planning/PROJECT.md)",
+      "Bash(node \"$HOME/.claude/get-shit-done/bin/gsd-tools.cjs\" config-new-project '{\"\"mode\"\":\"\"yolo\"\",\"\"granularity\"\":\"\"coarse\"\",\"\"parallelization\"\":true,\"\"commit_docs\"\":true,\"\"model_profile\"\":\"\"budget\"\",\"\"workflow\"\":{\"\"research\"\":true,\"\"plan_check\"\":true,\"\"verifier\"\":true,\"\"nyquist_validation\"\":false,\"\"auto_advance\"\":true}}')",
+      "Bash(node \"$HOME/.claude/get-shit-done/bin/gsd-tools.cjs\" commit \"chore: add project config\" --files .planning/config.json)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\guido\\ObsidianVaults\\MiSegundoCerebro\\01-Proyectos",
+      "C:\\Users\\guido\\.claude"
+    ]
+  }
+}

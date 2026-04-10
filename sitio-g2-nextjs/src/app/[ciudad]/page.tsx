@@ -27,14 +27,26 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description,
     alternates: { canonical: `https://g2intelligence.co/${ciudad}` },
     openGraph: {
+      type: 'website',
+      locale: 'es_CO',
+      siteName: 'G2 Intelligence',
+      url: `https://g2intelligence.co/${ciudad}`,
       title,
       description,
-      url: `https://g2intelligence.co/${ciudad}`,
+      images: [
+        {
+          url: '/opengraph-image',
+          width: 1200,
+          height: 630,
+          alt: `G2 Intelligence — IA para Empresas en ${city.name}, Colombia`,
+        },
+      ],
     },
     other: {
       'geo.region': city.region,
       'geo.placename': `${city.name}, Colombia`,
       ICBM: `${city.lat},${city.lon}`,
+      'fb:app_id': 'A74MnrVggi4x-GZO31bxtCU',
     },
   };
 }

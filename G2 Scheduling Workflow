@@ -1,0 +1,136 @@
+{
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "chat",
+                "options": {}
+            },
+            "id": "e307d7f7-f720-4a39-b2da-f9b21083f69a",
+            "name": "Webhook G2",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 1,
+            "position": [
+                250,
+                300
+            ],
+            "webhookId": "1c0360f1-fe27-42a5-9d24-7b52aebe9dd2"
+        },
+        {
+            "parameters": {
+                "conditions": {
+                    "string": [
+                        {
+                            "value1": "={{$json[\"type\"]}}",
+                            "value2": "scheduling"
+                        }
+                    ]
+                }
+            },
+            "id": "2dac47f5-871c-03c0-c2ee-1d53db97203e",
+            "name": "Es Agendamiento?",
+            "type": "n8n-nodes-base.if",
+            "typeVersion": 1,
+            "position": [
+                450,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "jsCode": "const inputData = items[0].json;\nconst dateStr = inputData.fecha; // Ej: \"sábado, 28 de febrero de 2026\"\n\n// Intentamos extraer una fecha válida. \n// Nota: n8n tiene Luxon disponible como 'DateTime'\nconst now = DateTime.now();\nlet startDate = now.plus({ days: 1 }).set({ hour: 10, minute: 0, second: 0 });\n\ntry {\n  // Lógica de parsing simple para el formato detectado\n  // \"sábado, 28 de febrero de 2026\"\n  const parts = dateStr.split(' ');\n  const day = parseInt(parts[1]);\n  const year = parseInt(parts[parts.length - 1]);\n  const months = {\n    'enero': 1, 'febrero': 2, 'marzo': 3, 'abril': 4, 'mayo': 5, 'junio': 6,\n    'julio': 7, 'agosto': 8, 'septiembre': 9, 'octubre': 10, 'noviembre': 11, 'diciembre': 12\n  };\n  const month = months[parts[3].toLowerCase()] || 1;\n  \n  startDate = DateTime.fromObject({ year, month, day, hour: 10, minute: 0 });\n} catch (e) {\n  // Fallback a mañana si falla el parse\n}\n\nreturn [{\n  json: {\n    ...inputData,\n    start_date: startDate.toISO(),\n    end_date: startDate.plus({ minutes: 30 }).toISO()\n  }\n}];"
+            },
+            "id": "fe27-42a5-9d24-7b52aebe9dd2-1c0360f1",
+            "name": "Preparar Fechas",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 1,
+            "position": [
+                650,
+                280
+            ]
+        },
+        {
+            "parameters": {
+                "calendar": "primary",
+                "summary": "=Consultoría IA: {{$json[\"nombre\"]}} ({{$json[\"empresa\"]}})",
+                "description": "Reunión estratégica agendada desde la web de G2Intelligence.",
+                "start": "={{$json[\"start_date\"]}}",
+                "end": "={{$json[\"end_date\"]}}",
+                "attendees": [
+                    "={{$json[\"email\"]}}"
+                ],
+                "additionalFields": {
+                    "conferenceDataFormat": "googleMeet"
+                }
+            },
+            "id": "1d53db97-203e-4574-ad3b-5c333f373f23",
+            "name": "Google Calendar",
+            "type": "n8n-nodes-base.googleCalendar",
+            "typeVersion": 1,
+            "position": [
+                850,
+                280
+            ]
+        },
+        {
+            "parameters": {
+                "workflowId": "COLOCA_AQUI_EL_ID_DE_REGISTRO_LEAD",
+                "options": {}
+            },
+            "id": "61f3393d-d4b3-40da-ad1b-d16d985656d5",
+            "name": "Call REGISTRO LEAD",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "typeVersion": 1,
+            "position": [
+                1050,
+                280
+            ]
+        }
+    ],
+    "connections": {
+        "Webhook G2": {
+            "main": [
+                [
+                    {
+                        "node": "Es Agendamiento?",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Es Agendamiento?": {
+            "main": [
+                [
+                    {
+                        "node": "Preparar Fechas",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Preparar Fechas": {
+            "main": [
+                [
+                    {
+                        "node": "Google Calendar",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Google Calendar": {
+            "main": [
+                [
+                    {
+                        "node": "Call REGISTRO LEAD",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    }
+}

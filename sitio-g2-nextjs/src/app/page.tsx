@@ -10,9 +10,24 @@ export async function generateMetadata(): Promise<Metadata> {
     description:
       'Transforma tu empresa con IA agentica. G2 Intelligence ofrece automatización de procesos, agentes inteligentes y consultoría en Cali, Jamundí, Palmira, Yumbo y Valle del Cauca.',
     openGraph: {
+      type: 'website',
+      locale: 'es_CO',
+      siteName: 'G2 Intelligence',
+      url: 'https://g2intelligence.co',
       title: 'G2 Intelligence — IA que Transforma Empresas en Cali',
       description:
         'Aumenta ventas y eficiencia con inteligencia artificial. Servicio para empresas en Cali y Valle del Cauca.',
+      images: [
+        {
+          url: '/opengraph-image',
+          width: 1200,
+          height: 630,
+          alt: 'G2 Intelligence — IA para Empresas en Cali, Colombia',
+        },
+      ],
+    },
+    other: {
+      'fb:app_id': 'A74MnrVggi4x-GZO31bxtCU',
     },
   };
 }

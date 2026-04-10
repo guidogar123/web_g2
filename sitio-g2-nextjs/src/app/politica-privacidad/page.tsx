@@ -11,14 +11,6 @@ export const metadata: Metadata = {
     description:
       'Política de privacidad de G2 Intelligence. Cumple Ley 1581 de 2012 y requisitos Meta Developers.',
     siteName: 'G2 Intelligence',
-    images: [
-      {
-        url: 'https://g2intelligence.co/opengraph-image',
-        width: 1200,
-        height: 630,
-        alt: 'G2 Intelligence — Política de Privacidad',
-      },
-    ],
   },
   other: {
     'og:image': 'https://g2intelligence.co/opengraph-image',

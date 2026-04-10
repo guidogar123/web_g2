@@ -21,6 +21,10 @@ export const metadata: Metadata = {
     ],
   },
   other: {
+    'og:image': 'https://g2intelligence.co/opengraph-image',
+    'og:image:width': '1200',
+    'og:image:height': '630',
+    'og:image:type': 'image/png',
     'fb:app_id': 'A74MnrVggi4x-GZO31bxtCU',
   },
   alternates: {

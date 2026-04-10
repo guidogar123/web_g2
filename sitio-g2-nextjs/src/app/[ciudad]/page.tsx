@@ -43,6 +43,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ],
     },
     other: {
+      'og:image': 'https://g2intelligence.co/opengraph-image',
+      'og:image:width': '1200',
+      'og:image:height': '630',
+      'og:image:type': 'image/png',
       'geo.region': city.region,
       'geo.placename': `${city.name}, Colombia`,
       ICBM: `${city.lat},${city.lon}`,

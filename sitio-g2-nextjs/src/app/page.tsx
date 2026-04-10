@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
         'Aumenta ventas y eficiencia con inteligencia artificial. Servicio para empresas en Cali y Valle del Cauca.',
     },
     other: {
-      'og:image': 'https://g2intelligence.co/opengraph-image',
+      'og:image': 'https://g2intelligence.co/opengraph-image.png',
       'og:image:width': '1200',
       'og:image:height': '630',
       'og:image:type': 'image/png',

@@ -47,10 +47,10 @@ export const metadata: Metadata = {
     title: 'G2 Intelligence — IA para Empresas en Cali',
     description:
       'Automatiza procesos y multiplica ventas con agentes inteligentes. Servicio para empresas en Cali, Jamundí, Palmira, Yumbo y Valle del Cauca.',
-    images: ['https://g2intelligence.co/opengraph-image'],
+    images: ['https://g2intelligence.co/opengraph-image.png'],
   },
   other: {
-    'og:image': 'https://g2intelligence.co/opengraph-image',
+    'og:image': 'https://g2intelligence.co/opengraph-image.png',
     'og:image:width': '1200',
     'og:image:height': '630',
     'og:image:type': 'image/png',

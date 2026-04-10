@@ -61,6 +61,7 @@ export const metadata: Metadata = {
     'geo.region': 'CO-VAC',
     'geo.placename': 'Cali, Colombia',
     ICBM: '3.4516,-76.5320',
+    'fb:app_id': 'A74MnrVggi4x-GZO31bxtCU',
   },
   alternates: {
     canonical: 'https://g2intelligence.co',

@@ -4,6 +4,14 @@ export const metadata: Metadata = {
   title: 'Política de Privacidad | G2 Intelligence',
   description:
     'Política de privacidad de G2 Intelligence. Conoce cómo protegemos tus datos personales según la Ley 1581 de 2012 de Colombia.',
+  openGraph: {
+    url: 'https://g2intelligence.co/politica-privacidad',
+    type: 'website',
+    title: 'Política de Privacidad | G2 Intelligence',
+    description:
+      'Política de privacidad de G2 Intelligence. Cumple Ley 1581 de 2012 y requisitos Meta Developers.',
+    siteName: 'G2 Intelligence',
+  },
   alternates: {
     canonical: 'https://g2intelligence.co/politica-privacidad',
   },

@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description,
       images: [
         {
-          url: '/opengraph-image',
+          url: 'https://g2intelligence.co/opengraph-image',
           width: 1200,
           height: 630,
           alt: `G2 Intelligence — IA para Empresas en ${city.name}, Colombia`,

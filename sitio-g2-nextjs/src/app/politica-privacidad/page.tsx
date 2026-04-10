@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     siteName: 'G2 Intelligence',
     images: [
       {
-        url: '/opengraph-image',
+        url: 'https://g2intelligence.co/opengraph-image',
         width: 1200,
         height: 630,
         alt: 'G2 Intelligence — Política de Privacidad',

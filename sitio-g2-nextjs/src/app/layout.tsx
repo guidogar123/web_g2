@@ -41,23 +41,19 @@ export const metadata: Metadata = {
     title: 'G2 Intelligence — IA que Transforma Empresas en Cali',
     description:
       'G2 Intelligence ayuda a empresas de Cali, Jamundí, Palmira, Yumbo y Valle del Cauca a adoptar IA, automatizar procesos y multiplicar ventas con agentes inteligentes.',
-    images: [
-      {
-        url: '/opengraph-image',
-        width: 1200,
-        height: 630,
-        alt: 'G2 Intelligence — IA para Empresas en Cali, Colombia',
-      },
-    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'G2 Intelligence — IA para Empresas en Cali',
     description:
       'Automatiza procesos y multiplica ventas con agentes inteligentes. Servicio para empresas en Cali, Jamundí, Palmira, Yumbo y Valle del Cauca.',
-    images: ['/opengraph-image'],
+    images: ['https://g2intelligence.co/opengraph-image'],
   },
   other: {
+    'og:image': 'https://g2intelligence.co/opengraph-image',
+    'og:image:width': '1200',
+    'og:image:height': '630',
+    'og:image:type': 'image/png',
     'geo.region': 'CO-VAC',
     'geo.placename': 'Cali, Colombia',
     ICBM: '3.4516,-76.5320',

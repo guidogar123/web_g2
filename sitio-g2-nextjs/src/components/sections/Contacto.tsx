@@ -36,8 +36,8 @@ const contactInfo = [
   {
     icon: Phone,
     label: 'Teléfono',
-    value: '+57 350 243 9698',
-    href: 'tel:+573502439698',
+    value: '+57 311 678 3068',
+    href: 'tel:+573116783068',
   },
 ];
 

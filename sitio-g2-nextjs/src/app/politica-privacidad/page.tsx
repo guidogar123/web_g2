@@ -315,7 +315,7 @@ export default function PoliticaPrivacidad() {
               <strong>Correo Electrónico:</strong> <a href="mailto:privacidad@g2intelligence.co" className="text-blue-600 hover:underline">privacidad@g2intelligence.co</a>
             </p>
             <p>
-              <strong>Teléfono:</strong> <a href="tel:+573502439698" className="text-blue-600 hover:underline">+57 350 243 9698</a>
+              <strong>Teléfono:</strong> <a href="tel:+573116783068" className="text-blue-600 hover:underline">+57 311 678 3068</a>
             </p>
             <p>
               <strong>Ubicación:</strong> Cali, Valle del Cauca, Colombia

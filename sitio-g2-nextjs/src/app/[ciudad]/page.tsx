@@ -85,7 +85,7 @@ export default async function CiudadPage({ params }: Props) {
     name: 'G2 Intelligence',
     description: `Empresa de inteligencia artificial y automatización de procesos para empresas en ${city.name}, ${city.department}`,
     url: `https://g2intelligence.co/${ciudad}`,
-    telephone: '+573502439698',
+    telephone: '+573116783068',
     email: 'hola@g2intelligence.co',
     address: {
       '@type': 'PostalAddress',
@@ -248,8 +248,8 @@ export default async function CiudadPage({ params }: Props) {
               hola@g2intelligence.co
             </a>{' '}
             ·{' '}
-            <a href="tel:+573502439698" className="hover:text-emerald-400 transition-colors">
-              +57 350 243 9698
+            <a href="tel:+573116783068" className="hover:text-emerald-400 transition-colors">
+              +57 311 678 3068
             </a>
           </p>
         </footer>

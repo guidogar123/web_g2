@@ -71,7 +71,7 @@ const localBusinessSchema = {
   description:
     'Empresa de inteligencia artificial y automatización de procesos para empresas colombianas',
   url: 'https://g2intelligence.co',
-  telephone: '+573502439698',
+  telephone: '+573116783068',
   email: 'hola@g2intelligence.co',
   address: {
     '@type': 'PostalAddress',

@@ -1,0 +1,29 @@
+name: Deploy web_g2
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sync code to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: 82.25.86.23
+          username: root
+          key: ${{ secrets.WEBG2_SSH_KEY }}
+          source: "."
+          target: "/etc/easypanel/projects/posgresql/web_g2/code/sitio-g2-nextjs/"
+          strip_components: 0
+
+      - name: Build & deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 82.25.86.23
+          username: root
+          key: ${{ secrets.WEBG2_SSH_KEY }}
+          script: bash /root/deploy-webg2.sh

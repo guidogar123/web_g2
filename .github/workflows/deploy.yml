@@ -11,7 +11,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy via git pull
+      - name: Sync files to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: 82.25.86.23
+          username: root
+          key: ${{ secrets.WEBG2_SSH_KEY }}
+          source: "sitio-g2-nextjs"
+          target: "/etc/easypanel/projects/posgresql/web_g2/code"
+          strip_components: 0
+
+      - name: Deploy on VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: 82.25.86.23
@@ -19,10 +29,8 @@ jobs:
           key: ${{ secrets.WEBG2_SSH_KEY }}
           envs: N8N_WEBHOOK_URL
           script: |
-            cd /etc/easypanel/projects/posgresql/web_g2/code
-            git stash --include-untracked 2>/dev/null || true
-            git pull origin main
-            cd sitio-g2-nextjs && bash deploy-webg2.sh
+            cd /etc/easypanel/projects/posgresql/web_g2/code/sitio-g2-nextjs
+            bash deploy-webg2.sh
 
       - name: Verify site responds
         uses: appleboy/ssh-action@v1.0.3

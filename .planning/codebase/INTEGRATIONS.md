@@ -1,109 +1,96 @@
-# External Integrations
+# Integrations
 
-**Analysis Date:** 2026-04-03
+**Analysis Date:** 2026-06-19
 
-## APIs & External Services
+## n8n Chat Widget
 
-**n8n Workflow Platform:**
-- Service: n8n automation and chat orchestration
-- What it's used for: AI assistant chat widget and meeting scheduling integration
-  - SDK/Client: @n8n/chat 1.9.1
-  - Endpoint: `https://n8n-n8n.ektnbd.easypanel.host/webhook/1c0360f1-fe27-42a5-9d24-7b52aebe9dd2/chat`
-  - Implementation: `src/sections/ChatWidget.tsx` - Chat initialization and configuration
-  - Implementation: `src/components/ScheduleModal.tsx` - Schedule submission webhook
+**Purpose:** Client-facing AI chat assistant embedded in the website.
 
-**Font Service:**
-- Service: Google Fonts
-- What it's used for: Inter font family for typography
-  - Implementation: Imported in `src/index.css` via @import
-  - Fonts: Inter 300-800 weights
+**Implementation:**
+- `@n8n/chat` ^1.14.0 npm package
+- Two-component pattern for SSR safety:
+  1. `ChatWidgetWrapper.tsx` — Client component using `dynamic(() => import('./ChatWidget'), { ssr: false })` to avoid server-side rendering
+  2. `ChatWidget.tsx` — Actual widget initializer using `createChat()` from `@n8n/chat`
+- Rendered on the Home page via `HomeClient.tsx`
+- Graceful degradation: widget is disabled entirely when `NEXT_PUBLIC_N8N_CHAT_WEBHOOK_URL` env var is absent
 
-## Data Storage
+**Configuration:**
+- Mode: `'window'` (floating button + popup chat window)
+- Custom dark theme matching brand colors (emerald accent, void black background)
+- Spanish i18n with custom welcome messages
+- `showWelcomeScreen: true`
 
-**Databases:**
-- None detected - Fully client-side application
+**Flow:** Client browser → `@n8n/chat` widget → n8n webhook server (direct connection)
 
-**File Storage:**
-- Local filesystem only - No cloud storage integration detected
+## n8n Webhook Backend
 
-**Caching:**
-- Browser localStorage - Used for rate limiting and session state
-  - Keys: `g2_schedule_cooldown`, `g2_schedule_ban` (schedule modal anti-spam)
-  - Implementation: `src/components/ScheduleModal.tsx` (lines 65-80)
+**Purpose:** Server-side proxy for form submissions, keeping n8n endpoint private.
 
-## Authentication & Identity
+**Architecture:**
+- Two API routes acting as proxy to a single server-side n8n webhook:
 
-**Auth Provider:**
-- None - Public marketing website with no user authentication
-- Unauthenticated form submissions to n8n webhook
+### `/api/webhook/n8n/contact` (POST)
+- Accepts: `{ nombre, email, empresa?, mensaje }`
+- Server-side validation via Zod `ContactSchema`
+- Rate limited: 3 req / 5 min per IP (in-memory `Map`)
+- Forwards validated payload to `N8N_WEBHOOK_URL` with `type: "contact"`
 
-## Monitoring & Observability
+### `/api/webhook/n8n/schedule` (POST)
+- Accepts: `{ nombre, email, telefono, fecha, hora }`
+- Server-side validation via Zod `ScheduleSchema`
+- Rate limited: 3 req / 5 min per IP (in-memory `Map`)
+- Forwards validated payload to `N8N_WEBHOOK_URL` with `type: "scheduling"`
 
-**Error Tracking:**
-- None detected - Basic error handling via try/catch
+**Security:**
+- Server-only env var `N8N_WEBHOOK_URL` never exposed to client
+- Client-side localStorage rate limit (client-side cooldown/ban) as additional layer
+- D-locked payload shapes prevent injection of extra fields
+- No PII stored server-side; audit logs only capture email domain + IP prefix
 
-**Logs:**
-- Browser console logging
-- Implementation: `src/sections/ChatWidget.tsx` (line 8) - "Initializing G2 Assistant Chat Widget..."
-- Toast notifications for user feedback via Sonner library
+## Vercel Deployment
 
-## CI/CD & Deployment
+**Purpose:** Production hosting and delivery.
 
-**Hosting:**
-- Not specified in codebase - Static hosting required (Vite SPA build output)
-- Build output directory: `dist/`
+**Configuration:**
+- `output: "standalone"` in next.config.ts
+- Custom redirect rule: `www.g2intelligence.co/*` → `g2intelligence.co/*` (permanent 308)
+- Custom domain: `g2intelligence.co`
 
-**CI Pipeline:**
-- None detected in codebase
-- Would require external setup (GitHub Actions, GitLab CI, etc.)
+## SEO / Search Engine Integration
 
-## Environment Configuration
+**Sitemap:** `src/app/sitemap.ts`
+- 16 URLs: homepage (weekly, priority 1.0) + 15 city pages (monthly, priority 0.8)
 
-**Required env vars:**
-- None configured - All configuration is hardcoded in source files
+**Robots.txt:** `src/app/robots.ts`
+- Full crawl permission for all user agents
+- References `https://g2intelligence.co/sitemap.xml`
 
-**Critical Configuration Points:**
-- n8n webhook URL: `https://n8n-n8n.ektnbd.easypanel.host/webhook/1c0360f1-fe27-42a5-9d24-7b52aebe9dd2/chat`
-  - Location: `src/sections/ChatWidget.tsx` (line 10) and `src/components/ScheduleModal.tsx` (line 89)
-  - Should be moved to environment variables before production
-- n8n widget configuration (colors, messages, themes)
-  - Location: `src/sections/ChatWidget.tsx` (lines 9-52)
+**Structured Data (JSON-LD):**
+- `LocalBusiness` schema in root layout (name, address, phone, email, area served, social links)
+- `ItemList` of 6 services in root layout
+- Per-city `LocalBusiness` schema on city pages with local geo data
 
-**Secrets location:**
-- No secrets detected or stored
-- n8n webhook URL is semi-public (should be protected in production)
+**Social Media / Open Graph:**
+- Facebook: `fb:app_id: A74MnrVggi4x-GZO31bxtCU`
+- Twitter/X: `@summary_large_image` cards
+- Open Graph: Full metadata on every page with locale `es_CO`
+- Geo metadata: `geo.region`, `geo.placename`, `ICBM` per city page
 
-## Webhooks & Callbacks
+## Social Media Links
 
-**Incoming:**
-- n8n Chat Webhook: POST endpoint receives chat messages and scheduling requests
-  - Endpoint: `https://n8n-n8n.ektnbd.easypanel.host/webhook/1c0360f1-fe27-42a5-9d24-7b52aebe9dd2/chat`
-  - Request body (chat): `{ message: string }`
-  - Request body (scheduling): `{ type: 'scheduling', nombre: string, email: string, telefono: string, empresa?: string, fecha: string, hora: string, timestamp: ISO8601 }`
-  - Implementation: `src/components/ScheduleModal.tsx` (lines 88-101)
+Used in Contacto section and layout metadata:
+- Facebook: `facebook.com/G2Intelligence`
+- X/Twitter: `x.com/g2intelligen_co`
+- Instagram: `instagram.com/g2intelligence_co/`
+- TikTok: `tiktok.com/@g2intelligence_co`
 
-**Outgoing:**
-- Form submissions to n8n webhook only
-- Contact form (Contacto section) - Currently simulated with 1500ms delay, no actual submission
-  - Implementation: `src/sections/Contacto.tsx` (lines 66-80) - Form submission is mocked
+## External Fonts
 
-## Social Media Integration
+- **Inter** — Primary sans-serif font (400, 600 weights)
+- **Roboto Mono** — Loaded but currently unused in visible UI (may be intended for code/monospace use)
 
-**Account Links (No API Integration):**
-- Facebook: https://www.facebook.com/profile.php?id=61552402294706
-- X (Twitter): https://x.com/g2intelligen_co
-- Instagram: https://www.instagram.com/g2intelligence_co/
-- TikTok: https://www.tiktok.com/@g2intelligence_co
-- Implementation: `src/sections/Contacto.tsx` (lines 31-35)
+## Integration Concerns
 
-## Contact Information
-
-**Embedded Data:**
-- Email: hola@g2intelligence.co
-- Phone: +57 350 243 9698
-- Location: Colombia
-- Implementation: `src/sections/Contacto.tsx` (lines 9-28)
-
----
-
-*Integration audit: 2026-04-03*
+1. **Rate limiter is in-memory** — In serverless deployments (Vercel), each instance has its own memory. A rotating attacker can bypass the 3-request limit by hitting different instances.
+2. **Chat webhook URL is public** — `NEXT_PUBLIC_N8N_CHAT_WEBHOOK_URL` is accessible via browser devtools. Anyone can send messages to the n8n chat endpoint directly.
+3. **No webhook response validation** — The n8n proxy routes don't validate the shape/content of n8n's response beyond checking `response.ok`.

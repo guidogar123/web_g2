@@ -1,255 +1,107 @@
 # Codebase Concerns
 
-**Analysis Date:** 2026-04-03
+**Analysis Date:** 2026-06-19
 
-## Tech Debt
+## 🔴 P0 — Producción
 
-**SPA Architecture Without SSR (Critical for SEO):**
-- Issue: Site is a Vite + React SPA with no Server-Side Rendering. Google sees empty `index.html` with only a root div. All content renders in JavaScript post-load.
-- Files: `Kimi_Agent_Diseño web G2Intelligence/app/index.html`, `Kimi_Agent_Diseño web G2Intelligence/app/vite.config.ts`
-- Impact:
-  - Google cannot index dynamic content reliably on new domains
-  - No meta descriptions, Open Graph tags, or structured data in HTML
-  - Sharing on social media shows no preview
-  - Severely limits SEO strategy for "Agentes IA Colombia", "Consultoría IA" keywords
-  - Timeline to first meaningful ranking: 6-12 months instead of 2-3 months
-- Fix approach: Implement prerendering at build time (vite-react-ssg, 4-8 hours) or migrate to Next.js with SSR (2-4 weeks). Prerendering recommended for single-page sites. Phase 2 priority per PROYECTO.md.
+### 1. In-memory rate limiter no es efectivo en serverless
+- **Archivo:** `src/lib/rate-limit.ts`
+- **Problema:** El rate limiter usa un `Map<string, RateLimitEntry>` en memoria. En despliegues serverless (Vercel), cada instancia tiene su propia memoria. Un atacante puede rotar requests entre instancias y evadir el límite de 3 req / 5 min.
+- **Impacto:** El formulario de contacto y agendamiento pueden ser spameados.
+- **Solución sugerida:** Usar un almacén externo compartido (Upstash Redis, Vercel KV) o rate limiting a nivel de Vercel Edge Middleware/WAF.
 
-**Missing Critical SEO Infrastructure:**
-- Issue: No robots.txt, no sitemap.xml, no schema.org markup, HTML lang="en" on Spanish site, no canonical URLs, incomplete meta tags
-- Files: `Kimi_Agent_Diseño web G2Intelligence/app/index.html`
-- Impact: Google cannot efficiently discover/crawl the site. Search results show incorrect metadata. Colombian Spanish speakers see "English" language signal.
-- Fix approach: FASE 1 per PROYECTO.md - add lang="es", meta description, OG tags, robots.txt, sitemap.xml, JSON-LD Organization schema. ~5 hours. Already documented in PROYECTO.md as Phase 1 quick wins.
+### 2. Chat widget webhook URL expuesta al cliente
+- **Archivo:** `src/components/ChatWidget.tsx`
+- **Variable:** `NEXT_PUBLIC_N8N_CHAT_WEBHOOK_URL`
+- **Problema:** Las variables con prefijo `NEXT_PUBLIC_` se exponen en el bundle del cliente. Cualquier usuario puede ver la URL del webhook de n8n en el código fuente del navegador y enviar mensajes directamente.
+- **Impacto:** El chat n8n puede recibir tráfico no autorizado/spam sin pasar por la validación del servidor.
+- **Solución sugerida:** Canalizar el chat a través de un proxy server-side similar al de los formularios, o agregar autenticación/token en n8n.
 
-**Hardcoded External Endpoints:**
-- Issue: n8n webhook URL hardcoded in multiple places
-- Files:
-  - `Kimi_Agent_Diseño web G2Intelligence/app/src/sections/ChatWidget.tsx:10` - `https://n8n-n8n.ektnbd.easypanel.host/webhook/1c0360f1-fe27-42a5-9d24-7b52aebe9dd2/chat`
-  - `Kimi_Agent_Diseño web G2Intelligence/app/src/components/ScheduleModal.tsx:89` - same URL
-- Impact: Changing webhook requires code rebuild + redeploy. URL exposed in client bundle (viewable in browser devtools). If endpoint changes, entire app breaks.
-- Fix approach: Extract to environment variable (VITE_N8N_WEBHOOK_URL). Use .env.local in development, set via environment at deploy time. Requires vite.config.ts update for environment variable exposure.
+### 3. Sin error boundaries ni loading states
+- **Problema:** Ninguna página o componente tiene `error.tsx`, `loading.tsx`, o `not-found.tsx` en el App Router.
+- **Impacto:** Si un error ocurre en un componente, el usuario ve una pantalla en blanco o un error de React sin formato. Experiencia de usuario deficiente para errores inesperados.
+- **Archivos afectados:** `src/app/`, todos los páginas.
+- **Solución sugerida:** Agregar `error.tsx` y `not-found.tsx` globales, más `loading.tsx` para cada ruta.
 
----
+## 🟡 P1 — Riesgo Medio
 
-## Known Bugs
+### 4. Cero tests en toda la codebase
+- **Problema:** No hay framework de testing, no hay archivos de test, no hay scripts de test en package.json.
+- **Impacto:** Cualquier refactor o cambio en schemas de validación, rate limiter, o componentes de formulario no tiene red de seguridad. Los errores llegan a producción sin detección.
+- **Cobertura faltante:**
+  - `schemas.ts` — Validación de formularios (crítico para leads)
+  - `rate-limit.ts` — Lógica de rate limiting
+  - `cities.ts` — Datos geo de 15 ciudades
+  - `route.ts` (ambos) — API endpoints de webhook
+  - Componentes de formulario (Contacto, ScheduleModal)
 
-**Rate-Limiting Logic Race Condition:**
-- Issue: In `ScheduleModal.tsx:63-80`, checkRateLimit() logic has a flaw. If user submits rapidly between cooldown check and setLoading, multiple concurrent requests can bypass the cooldown.
-- Files: `Kimi_Agent_Diseño web G2Intelligence/app/src/components/ScheduleModal.tsx` lines 82-115
-- Trigger: User rapidly clicks "Confirmar Cita" button while loading. Race condition between `checkRateLimit()` and `setLoading(true)`.
-- Workaround: Current UI disables button when loading (line 247), which mitigates in practice. However, network latency could still allow race condition if first request is slow.
+### 5. Roboto_Mono font cargado pero no usado visiblemente
+- **Archivo:** `src/app/layout.tsx` (líneas 13-18)
+- **Problema:** `Roboto_Mono` se carga con `next/font/google` y se asigna a `--font-roboto-mono` como variable CSS, pero no hay ningún elemento visible que use esta fuente. Los styles de shadcn/ui la referencian como `--font-mono` pero Tailwind v4 actual no la aplica.
+- **Impacto:** ~20-30KB extra en el bundle de font innecesariamente.
+- **Solución sugerida:** Eliminar la carga de Roboto Mono si no se usa, o agregar `@apply font-mono` donde corresponda.
 
-**Incomplete Empresa Form Field:**
-- Issue: In ScheduleModal form, empresa field defined in state (line 54) but no form input for it. Data collected but not UI-exposed.
-- Files: `Kimi_Agent_Diseño web G2Intelligence/app/src/components/ScheduleModal.tsx` lines 50-55, 142-185
-- Impact: Company name never captured despite being in formData object. Sent to webhook but always undefined.
-- Workaround: Currently no immediate impact since webhook receives the form as-is. But defeats purpose of collecting empresa data.
+### 6. `shadcn` en runtime dependencies
+- **Archivo:** `package.json`
+- **Problema:** `shadcn: "^4.1.2"` está en `dependencies` (runtime). El CLI `shadcn` solo se necesita durante desarrollo para agregar/actualizar componentes.
+- **Impacto:** Aumenta innecesariamente el tamaño del bundle de producción y el `node_modules` en producción.
+- **Solución sugerida:** Mover `shadcn` a `devDependencies`.
 
----
+### 7. NIT placeholder en Footer
+- **Archivo:** `src/components/sections/Footer.tsx` (línea 103)
+- **Problema:** `NIT: 901.XXX.XXX-X` usa `XXX` como placeholder, lo cual se despliega así en producción.
+- **Impacto:** El sitio muestra un NIT inválido en producción. Aspecto poco profesional.
+- **Solución sugerida:** Completar el NIT real o eliminar la línea hasta tenerlo.
 
-## Security Considerations
+### 8. Social links inconsistentes entre componentes
+- **Problema:** Los links de redes sociales aparecen en 3 lugares con valores diferentes:
+  - `layout.tsx` (sameAs): URLs con IDs específicos
+  - `Contacto.tsx` (socialLinks): URLs genéricas
+  - `Footer.tsx` (socialLinks): URLs genéricas diferentes
+- **Impacto:** Las URLs en `Contacto.tsx` y `Footer.tsx` pueden no coincidir con las cuentas reales (ej: `twitter.com/G2Intelligence` vs `x.com/g2intelligen_co` en layout).
+- **Solución sugerida:** Centralizar los social links en una única fuente de verdad (`lib/`), idealmente de tipado fuerte.
 
-**Client-Side Sensitive Data Exposure:**
-- Risk: NIT placeholder exposed in footer: `NIT: 901.XXX.XXX-X`
-- Files: `Kimi_Agent_Diseño web G2Intelligence/app/src/sections/Footer.tsx:142`
-- Current mitigation: Masked with X's (good). However, this suggests the real NIT will eventually be unmasked here — exposing company tax ID in client HTML.
-- Recommendations:
-  - Document that NIT should never be placed in frontend code, even masked
-  - Consider removing from footer entirely, or place only on secure backend pages
-  - Use contact form confirmation emails for tax/legal info instead
+## 🟢 P2 — Riesgo Bajo / Deuda Técnica
 
-**Hardcoded Webhook Exposures:**
-- Risk: n8n webhook endpoint (with ID) visible in client-side source code
-- Files: `Kimi_Agent_Diseño web G2Intelligence/app/src/sections/ChatWidget.tsx:10`, `ScheduleModal.tsx:89`
-- Current mitigation: n8n webhooks can include authentication in the URL itself (the ID is a shared secret)
-- Recommendations:
-  - Document that this endpoint URL acts as an API key — never expose in public repos
-  - Implement backend proxy if additional security is needed (e.g., rate-limiting, IP restrictions)
-  - If webhook ID rotates, entire frontend must redeploy
-  - Consider using environment variables to avoid exposing URLs in git history
+### 9. `dynamicParams = false` impide agregar ciudades sin rebuild
+- **Archivo:** `src/app/[ciudad]/page.tsx` (línea 7)
+- **Problema:** `dynamicParams = false` + `force-static` significa que solo las 15 ciudades definidas en `generateStaticParams` generan página. Cualquier ciudad nueva requiere rebuild completo.
+- **Impacto:** Si se necesita agregar una ciudad urgentemente, no se puede sin deploy.
+- **Solución sugerida:** Cambiar a `dynamicParams = true` (con ISR) para soporte de nuevas ciudades bajo demanda.
 
-**LocalStorage Rate-Limiting Bypass:**
-- Risk: Rate-limiting stored in browser localStorage (`g2_schedule_cooldown`, `g2_schedule_ban`)
-- Files: `Kimi_Agent_Diseño web G2Intelligence/app/src/components/ScheduleModal.tsx:20-23, 65-66`
-- Current mitigation: Client-side only. Can be trivially bypassed by clearing localStorage or using DevTools.
-- Recommendations:
-  - localStorage rate-limiting is advisory only (for UX). Implement server-side rate-limiting in n8n webhook or backend proxy.
-  - Consider fingerprinting (IP + User-Agent) for abuse detection
-  - Document this as "UX throttling" not "security throttling"
+### 10. Layout duplicación entre city pages y secciones
+- **Problema:** Las city pages (`src/app/[ciudad]/page.tsx`) tienen su propio header, hero, servicios, CTA y footer inline — no reusan los componentes compartidos (`HomeClient.tsx`, `Navigation.tsx`, `Hero.tsx`, `Footer.tsx`).
+- **Impacto:** Cambios de diseño (header, footer, CTA) deben aplicarse en dos lugares: componentes compartidos + city pages. Alto riesgo de divergencia visual.
+- **Solución sugerida:** Extraer un layout compartido o componente `CityPageShell` que use los mismos componentes de sección.
 
-**No CORS Headers Documented:**
-- Risk: ScheduleModal makes fetch() to external n8n domain without visible CORS handling
-- Files: `Kimi_Agent_Diseño web G2Intelligence/app/src/components/ScheduleModal.tsx:89-100`
-- Current mitigation: Likely working because n8n webhook has CORS enabled (common for webhooks)
-- Recommendations:
-  - Document expected CORS headers from n8n endpoint
-  - If this breaks, error message "Error al agendar. Intenta de nuevo" (line 111) won't help users debug CORS issues
-  - Consider backend proxy to handle CORS consistently
+### 11. Sin CI/CD pipeline en el repositorio
+- **Problema:** No hay configuración de GitHub Actions u otro CI en el repo. No hay lint automático, tests, o verificación de build en PRs.
+- **Impacto:** Errores de lint o build pueden llegar a `main` sin detección.
+- **Solución sugerida:** Agregar GitHub Actions workflow con lint + build + (futuros) tests.
 
----
+### 12. Sin manejo de imágenes optimizadas
+- **Problema:** No se usa `next/image` ni hay imágenes en `public/` aparte de `opengraph-image.png`. No hay configuración de `sharp` (aunque está en devDependencies).
+- **Impacto:** Meta tags de OG image funcionan, pero no hay imágenes de contenido que necesiten optimización.
+- **Solución sugerida:** Si se agregan imágenes al sitio, usar `next/image` con los formatos modernos (WebP/AVIF).
 
-## Performance Bottlenecks
+### 13. Footer links sin destino (#)
+- **Archivo:** `src/components/sections/Footer.tsx`
+- **Problema:** Links "Blog", "Carreras", "Términos de Servicio", "Política de Cookies" apuntan a `#` — no tienen página asociada.
+- **Impacto:** UX incompleta. Usuarios clickean y no pasa nada.
+- **Solución sugerida:** Crear las páginas faltantes o eliminar los links temporalmente.
 
-**Large Radix UI Component Library:**
-- Problem: 40+ @radix-ui/* dependencies in package.json, all included in bundle
-- Files: `Kimi_Agent_Diseño web G2Intelligence/app/package.json` lines 16-40
-- Current usage: Only ~15 components used (Dialog, Input, Label, etc.) but all installed
-- Impact: Increases build size and bundle analysis. Many unused components.
-- Improvement path:
-  - Run `npm ls @radix-ui` to audit which are actually imported
-  - Remove unused @radix-ui packages (keep only required ones)
-  - Current tree-shaking should eliminate most unused code, but cleaner dependency list improves maintainability
+### 14. Compatibilidad internacional i18n limitada
+- **Problema:** El sitio está completamente en español (es_CO). No hay estructura para i18n (sin `next-intl`, `react-intl`, o similar).
+- **Impacto:** Si se necesita inglés u otros idiomas en el futuro, hay que refactorizar todo el texto hardcodeado en componentes. No es urgente ahora pero la deuda crecerá.
+- **Solución sugerida:** Adoptar `next-intl` si hay planes de multi-idioma.
 
-**Console Logging in Production:**
-- Problem: `console.log('Initializing G2 Assistant Chat Widget...')` left in ChatWidget
-- Files: `Kimi_Agent_Diseño web G2Intelligence/app/src/sections/ChatWidget.tsx:8`
-- Impact: Minor. Outputs to browser console on every page load. No performance cost but indicates code not fully production-hardened.
-- Improvement path: Remove debug logging or wrap in `process.env.NODE_ENV === 'development'` check
+## Fortalezas Actuales
 
----
-
-## Fragile Areas
-
-**ScheduleModal Time Slot Generation:**
-- Files: `Kimi_Agent_Diseño web G2Intelligence/app/src/components/ScheduleModal.tsx:57-61`
-- Why fragile: Hard-coded 6 AM - 8 PM (20:00) business hours. If business changes hours, code must be modified. Assumes UTC time without timezone conversion.
-- Safe modification: Extract to constants at top (SCHEDULE_START_HOUR, SCHEDULE_END_HOUR). Add timezone parameter if international scaling needed.
-- Test coverage: No unit tests for time slot generation logic.
-
-**Available Days Calculation:**
-- Files: `Kimi_Agent_Diseño web G2Intelligence/app/src/components/ScheduleModal.tsx:26-44`
-- Why fragile: Hard-coded 2-day lead time, skips Sundays only (no holidays). If business closes for holidays, users can still book those days.
-- Safe modification: Extract to config object {leadDays: 2, closedDays: [0, 6] (Sundays/Saturdays), holidays: [...]}. Consider using date-fns for holiday handling.
-- Test coverage: No tests for edge cases (month boundaries, leap years, daylight savings).
-
-**Footer Link Scroll Behavior:**
-- Files: `Kimi_Agent_Diseño web G2Intelligence/app/src/sections/Footer.tsx:26-33, 44, 85-106`
-- Why fragile: Navigation relies on ID selectors matching HTML structure (e.g., `#hero`, `#servicios`, `#nosotros`). If section IDs change, links break silently.
-- Safe modification: Create central SECTION_IDS constant object, use in both Footer and sections. Add console warning if element not found.
-- Test coverage: No E2E tests verifying footer links scroll to correct sections.
-
-**Form Data Object Mutation:**
-- Files: `Kimi_Agent_Diseño web G2Intelligence/app/src/components/ScheduleModal.tsx:50-55, 151, 165, 179`
-- Why fragile: setFormData spreads entire object on each input change (e.g., line 151). If more fields added, easy to miss one and create silent data loss.
-- Safe modification: Use form library (react-hook-form already imported in dependencies) or create typed setter for each field.
-- Test coverage: No form validation tests.
-
----
-
-## Scaling Limits
-
-**Single Webhook Endpoint for All Events:**
-- Capacity: One n8n webhook ID handles chat + scheduling
-- Limit: If traffic increases 10x, single webhook becomes bottleneck. No load balancing.
-- Scaling path: Separate webhook for chat and scheduling. Implement n8n queue nodes. Add rate-limiting at nginx reverse proxy level before reaching n8n.
-
-**Client-Side State Only:**
-- Capacity: All state in React component memory. No persistent session tracking.
-- Limit: If business needs to show "currently 5 people ahead of you in queue", cannot implement without backend.
-- Scaling path: Introduce backend API (Node.js/Supabase) to track queue state, session persistence, analytics.
-
----
-
-## Dependencies at Risk
-
-**No Lockfile Issues Detected:**
-- Status: package-lock.json present and committed. Dependency tree is reproducible.
-
-**React 19.2.0 + Vite 7.2.4 (Cutting Edge):**
-- Risk: Very new versions (Feb 2024 releases). May have undiscovered bugs or breaking changes in minor versions.
-- Impact: If critical security issue found, might require quick patch with unforeseen incompatibilities.
-- Migration plan: Monitor React 19.x and Vite 7.x release notes. Test thoroughly before upgrading minor versions. Consider using ~19.2.0 in package.json to avoid auto-patch to 19.3+ if issues arise.
-
-**@n8n/chat v1.9.1 Dependency:**
-- Risk: Proprietary n8n widget. Limited control over updates. If n8n sunsets this package, no alternative without rewriting chat UI.
-- Impact: Chat widget becomes unmaintainable if package is deprecated.
-- Migration plan: Audit n8n/chat source code. Plan alternative: custom React chat component + n8n webhook (decouples from widget library).
-
----
-
-## Missing Critical Features
-
-**No Analytics Integration:**
-- Problem: No Google Analytics, Posthog, or equivalent. Cannot measure visitor behavior, conversion funnel, bounce rate.
-- Blocks: SEO strategy (PROYECTO.md recommends GA4 + GSC integration). Cannot validate if content resonates.
-- Impact: Flying blind on what works. Cannot optimize for user engagement.
-
-**No Form Validation on Client:**
-- Problem: ScheduleModal accepts any email format, any phone. No client-side validation before submission.
-- Blocks: Poor UX if user submits invalid email but only finds out after slow network request.
-- Impact: Higher server load from invalid submissions.
-
-**No Error Recovery UI:**
-- Problem: ScheduleModal error toast (line 111) says "Error al agendar. Intenta de nuevo." but doesn't say WHY it failed (network? webhook timeout? validation?).
-- Blocks: Users cannot debug or retry intelligently.
-- Impact: Abandoned booking attempts, lost leads.
-
-**No Unsubscribe/Opt-Out Mechanism:**
-- Problem: Scheduling collects email + phone but no way for users to opt out of future communications.
-- Blocks: Potential GDPR/PIPEDA compliance issue if data stored in CRM without explicit consent record.
-- Impact: Legal risk if emails/calls escalate.
-
----
-
-## Test Coverage Gaps
-
-**No Automated Tests:**
-- What's not tested: All business logic (form validation, rate-limiting, date calculation, navigation)
-- Files: No test files found in codebase. 67 component files with zero test coverage.
-- Risk: Changes to ScheduleModal time logic or Footer scroll behavior could break without detection.
-- Priority: HIGH - Recommend starting with:
-  1. ScheduleModal form submission + rate-limiting (`checkRateLimit()` logic)
-  2. Available days calculation (boundary cases, holidays)
-  3. Footer section scroll functionality
-
-**No E2E Tests:**
-- Missing: User flows (booking a consultation, submitting contact form)
-- Files: No Playwright, Cypress, or equivalent config
-- Risk: SEO improvements (FASE 1) and widget integrations cannot be validated across browsers/devices
-
-**No Build Verification:**
-- Missing: Pre-deploy checks (a11y, performance, broken links)
-- Workaround: Manual pre-launch QA only
-- Recommendation: Add ESLint (already configured), add @axe-core/react for a11y, add lighthouse CI
-
----
-
-## Deployment & Operations Issues
-
-**Deploy Script Has Placeholders:**
-- Issue: `deploy.sh` contains template variables `tu_usuario`, `tu_vps_ip`, `REMOTE_PATH`
-- Files: `Kimi_Agent_Diseño web G2Intelligence/app/deploy.sh`
-- Impact: Script will not work as-is. Requires manual editing before first deploy. No error checking if vars are empty.
-- Fix approach: Use environment variables (.env.deploy) or prompt user for input. Add validation: `if [ -z "$USER" ]; then echo "ERROR: USER not set"; exit 1; fi`
-
-**SSL Certificate Status Unknown:**
-- Issue: PROYECTO.md notes "SSL: pendiente Certbot en VPS" (2026-04-03)
-- Files: VPS deployment status unknown without SSH access
-- Impact: Site may not have HTTPS. Browser warning if HTTP served to g2intelligence.co.
-- Fix approach: Run `certbot certonly --standalone -d g2intelligence.co -d www.g2intelligence.co` on VPS. Set auto-renewal cron.
-
-**No Health Check / Monitoring:**
-- Missing: Uptime monitoring, error tracking, performance alerts
-- Impact: Site could be down and nobody notices until customer complains
-- Recommendation: Add free tier Uptime Robot (5-min ping), Sentry (error tracking), or equivalent
-
----
-
-## Summary by Priority
-
-| Category | Issue | Priority | Time to Fix |
-|----------|-------|----------|------------|
-| SEO | SPA without SSR | CRITICAL | 4-8 hours (prerender) / 2-4 weeks (Next.js) |
-| SEO | Missing SEO metadata | CRITICAL | 5 hours |
-| Security | Hardcoded webhook URL | HIGH | 1 hour |
-| Tech Debt | Client-only rate-limiting | HIGH | 2 hours |
-| Testing | Zero test coverage | HIGH | 20-40 hours (initial suite) |
-| Operations | Deploy script placeholders | MEDIUM | 1 hour |
-| Performance | Unused Radix components | MEDIUM | 2 hours |
-| UX | No form validation UI | MEDIUM | 3 hours |
-| Code Quality | Rate-limit race condition | MEDIUM | 2 hours |
-| Compliance | Missing opt-out mechanism | MEDIUM | 4 hours |
-
----
-
-*Concerns audit: 2026-04-03*
+✅ **Server-side form proxy** — Las rutas API protegen la URL de n8n del lado servidor para formularios  
+✅ **Dual Zod validation** — Validación tanto en cliente como en servidor  
+✅ **Rate limiting server-side** — Aunque imperfecto en serverless, es mejor que nada  
+✅ **D-locked payloads** — Solo los campos validados se reenvían (previene inyección de campos)  
+✅ **SEO first** — Metadata completa en todas las rutas, JSON-LD, sitemap dinámico, geo tags  
+✅ **Dark theme por defecto** — Diseño consistente sin flash de modo claro  
+✅ **Graceful degradation** — Chat widget se desactiva automáticamente sin env var configurada  
+✅ **Standalone output** — Listo para despliegue en Vercel con www → naked domain redirect

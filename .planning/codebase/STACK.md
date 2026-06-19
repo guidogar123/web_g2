@@ -1,100 +1,99 @@
 # Technology Stack
 
-**Analysis Date:** 2026-04-03
+**Analysis Date:** 2026-06-19
 
 ## Languages
 
 **Primary:**
-- TypeScript 5.9.3 - All source code including React components and build configuration
-- JavaScript - Supporting configuration files and assets
+- TypeScript 5.x — All source code including React components, API routes, and build configuration
+- CSS3 — Styling with Tailwind CSS v4 and shadcn/ui design tokens
 
 **Secondary:**
-- CSS3 - Styling with Tailwind CSS and custom utilities
+- JavaScript — Build configuration files
 
 ## Runtime
 
 **Environment:**
-- Node.js (inferred from package.json type: "module")
+- Node.js (inferred from Next.js 16.2.2 requirements)
+- npm — Package manager with `package-lock.json`
 
-**Package Manager:**
-- npm - Lockfile: `package-lock.json` present
+## Frontend Framework
 
-## Frameworks
+**Next.js 16.2.2** (App Router)
+- Server Components by default (RSC)
+- Client components via explicit `'use client'` directive
+- ISR (Incremental Static Regeneration) — Home page revalidates every 3600s
+- Static generation — City pages use `force-static` + `dynamicParams = false`
 
-**Core:**
-- React 19.2.0 - UI component framework and rendering
-- Vite 7.2.4 - Build tool and dev server
+**React 19.2.4**
+- Server and client component patterns
+- `useState` for local state in client components
+- `useEffect` for side effects (canvas particles, scroll detection, chat widget init)
+- `useRef` for canvas element references
 
-**UI Component Library:**
-- Radix UI - 30+ component libraries (@radix-ui/*) - Unstyled, accessible components
-  - Includes: accordion, dialog, dropdown, select, tooltip, tabs, slider, navigation-menu, popover, context-menu, progress, radio-group, checkbox, switch, toggle, scroll-area, alert-dialog, avatar, breadcrumb, aspect-ratio, hover-card, separator, collapsible, menubar
+## Styling
 
-**Styling:**
-- Tailwind CSS 3.4.19 - Utility-first CSS framework
-- PostCSS 8.5.6 - CSS transformation with autoprefixer
-- Autoprefixer 10.4.23 - CSS vendor prefixing
+**Tailwind CSS v4** (`tailwindcss: ^4`, `@tailwindcss/postcss: ^4`)
+- CSS-first configuration via `@import "tailwindcss"` in globals.css
+- OKLCH color tokens for brand identity
+- Dark theme by default (`#050505` void black background)
+- Custom `@theme` block for design tokens
 
-**Form & Validation:**
-- React Hook Form 7.70.0 - Efficient form state management
-- @hookform/resolvers 5.2.2 - Validation resolver integration
-- Zod 4.3.5 - TypeScript-first schema validation
+**shadcn/ui** (Radix Nova style)
+- `components.json` configured with `style: "radix-nova"`, `rsc: true`
+- UI primitives: `button`, `dialog`, `input`, `label`, `textarea`
+- Uses `class-variance-authority` + `clsx` + `tailwind-merge` (`cn()` utility)
+- `tw-animate-css` for animation utilities
 
-**Development:**
-- ESLint 9.39.1 - JavaScript/TypeScript linting
-- @vitejs/plugin-react 5.1.1 - React support in Vite
+## UI Components & Icons
+- **lucide-react** ^1.7.0 — Icon library (Brain, Cpu, TrendingUp, Sparkles, etc.)
+- **sonner** ^2.0.7 — Toast notifications for form feedback
+- **embla-carousel-react** ^8.6.0 — Carousel component
+- **date-fns** ^4.1.0 — Date formatting (used in ScheduleModal with es locale)
 
-## Key Dependencies
+## Form Validation
+- **Zod** ^4.3.6 — Dual validation (client + server) with `ContactSchema` and `ScheduleSchema`
+- Type inference via `z.infer<>` for form data types
 
-**Critical:**
-- @n8n/chat 1.9.1 - Why it matters: Embedded chat widget for n8n workflow integration (ChatWidget component uses this for AI assistant)
-- next-themes 0.4.6 - Dark mode theme management
+## Chat Integration
+- **@n8n/chat** ^1.14.0 — Chat widget dynamically imported with `ssr: false`
+- Dark mode theme configuration matching brand colors
 
-**UI & UX:**
-- Lucide React 0.562.0 - SVG icon library (Mail, Phone, MapPin, Facebook, Twitter, Instagram icons)
-- Recharts 2.15.4 - React charting library for data visualization
-- Sonner 2.0.7 - Toast notification system
-- embla-carousel-react 8.6.0 - Carousel/slider component
-- react-resizable-panels 4.2.2 - Resizable panel layouts
-- date-fns 4.1.0 - Date utilities and formatting (used in schedule modal)
-- react-day-picker 9.13.0 - Calendar picker component
-- input-otp 1.4.2 - OTP input component
-- vaul 1.1.2 - Drawer component
-- cmdk 1.1.1 - Command palette/command menu
-- class-variance-authority 0.7.1 - Component variant management
-- clsx 2.1.1 - Conditional class name builder
-- tailwind-merge 3.4.0 - Merge Tailwind classes
+## Build & Development
 
-**Utilities:**
-- react-dom 19.2.0 - React DOM rendering
+**Build Tooling:**
+- `next build` — Production build
+- `next dev` — Development server
+- `next start` — Production server start
+- Standalone output mode (`output: "standalone"` in next.config.ts)
 
-## Configuration
+**Linting:**
+- ESLint ^9 with `eslint-config-next` (core-web-vitals + TypeScript configs)
+- `eslint.config.mjs` using new flat config format (`defineConfig` from "eslint/config")
 
-**Environment:**
-- Configuration managed through JavaScript config files
-- No .env file detected in codebase
-- Hardcoded n8n webhook URL in ChatWidget and ScheduleModal components: `https://n8n-n8n.ektnbd.easypanel.host/webhook/1c0360f1-fe27-42a5-9d24-7b52aebe9dd2/chat`
+**TypeScript:**
+- `strict: true` — Full strict mode enabled
+- `target: "ES2017"`
+- `moduleResolution: "bundler"`
+- Path alias `@/*` → `./src/*`
+- JSX: `react-jsx`
 
-**Build:**
-- `vite.config.ts` - Vite configuration with React plugin and @ path alias
-- `tsconfig.json` - TypeScript base configuration with path aliases
-- `tsconfig.app.json` - App-specific TypeScript configuration
-- `tsconfig.node.json` - Node/build tools TypeScript configuration
-- `tailwind.config.js` - Tailwind CSS theme and plugin configuration
-- `postcss.config.js` - PostCSS configuration with Tailwind
-- `eslint.config.js` - ESLint rules and language configuration
+## Deployment
 
-## Platform Requirements
+**Platform:** Vercel (inferred from `.vercel/` directory)
+- Standalone output format
+- Custom redirect: `www.g2intelligence.co` → `g2intelligence.co` (permanent 308)
 
-**Development:**
-- Node.js with npm package manager
-- Modern browser with ES2020 support (ECMAScript version set to 2020 in ESLint)
-- TypeScript knowledge for development
+**Environment Variables:**
+| Variable | Scope | Purpose |
+|---|---|---|
+| `NEXT_PUBLIC_N8N_CHAT_WEBHOOK_URL` | Public | n8n chat widget webhook URL |
+| `N8N_WEBHOOK_URL` | Server-only | Backend webhook proxy target |
+| `FB_APP_ID` | Public | Meta/Facebook integration (in layout metadata) |
 
-**Production:**
-- Static hosting capable of serving SPA (Single Page Application)
-- Base path configuration available for deployment at non-root paths
-- Vite build output to `dist/` directory
-
----
-
-*Stack analysis: 2026-04-03*
+## Notable Absences
+- No database (all data flows through n8n webhooks)
+- No authentication system (fully public website)
+- No state management library (props + useState sufficient)
+- No testing framework
+- No CI/CD configuration in repo

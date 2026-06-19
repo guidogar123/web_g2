@@ -1,6 +1,9 @@
 import { headers } from 'next/headers';
 import { ScheduleSchema } from '@/lib/schemas';
 import { checkRateLimit } from '@/lib/rate-limit';
+import { fetchWithTimeout } from '@/lib/utils';
+
+const N8N_TIMEOUT_MS = 10_000;
 
 export async function POST(request: Request) {
   try {
@@ -53,12 +56,16 @@ export async function POST(request: Request) {
       timestamp: new Date().toISOString(),
     };
 
-    // Proxy to n8n server-side (per FORM-05)
-    const n8nResponse = await fetch(webhookUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
+    // Proxy to n8n server-side (per FORM-05) con timeout de 10s
+    const n8nResponse = await fetchWithTimeout(
+      webhookUrl,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      },
+      N8N_TIMEOUT_MS,
+    );
 
     if (!n8nResponse.ok) {
       console.error(`[form] n8n responded ${n8nResponse.status}`);
@@ -80,7 +87,12 @@ export async function POST(request: Request) {
 
     return Response.json({ success: true }, { status: 200 });
   } catch (error) {
-    console.error('[form] unexpected error:', error);
-    return Response.json({ error: 'Error de servidor.' }, { status: 500 });
+    // Error de timeout (AbortError) o de red
+    const message =
+      error instanceof DOMException && error.name === 'AbortError'
+        ? 'El servidor tardó demasiado en responder. Intenta de nuevo.'
+        : 'Error de servidor.';
+    console.error('[form] error:', error);
+    return Response.json({ error: message }, { status: 500 });
   }
 }

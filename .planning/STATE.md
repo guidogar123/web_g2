@@ -4,7 +4,7 @@ milestone: v1.0
 milestone_name: milestone
 status: planning
 stopped_at: Completed 05-performance-launch-validation/05-01-PLAN.md
-last_updated: "2026-04-04T00:00:54.579Z"
+last_updated: "2026-06-19T00:00:00.000Z"
 progress:
   total_phases: 5
   completed_phases: 5
@@ -14,9 +14,9 @@ progress:
 
 # G2 Intelligence — Project State
 
-**Project:** G2 Intelligence Website Rebuild (React SPA → Next.js 15)
-**Status:** Ready for Phase 1 Planning
-**Last Updated:** 2026-04-03
+**Project:** G2 Intelligence Website (Next.js 16 App Router)
+**Status:** Codebase map refreshed
+**Last Updated:** 2026-06-19
 
 ---
 
@@ -150,7 +150,7 @@ Transforming React SPA (Vite) into Next.js 15 App Router site optimized for loca
 
 ## Architecture Context
 
-**Stack:** Next.js 15 (App Router), React 19, TypeScript 5.x, Tailwind CSS 3.x, shadcn/ui
+**Stack:** Next.js 16.2.2 (App Router), React 19.2.4, TypeScript 5.x, Tailwind CSS 4.x, shadcn/ui (Radix Nova)
 **Deployment:** Vercel (zero-config Next.js integration)
 **Key Integrations:** n8n webhook (chat, scheduling, contact form)
 **Auth:** None (B2B consulting, no user accounts)

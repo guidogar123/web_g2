@@ -5,8 +5,13 @@ type RateLimitEntry = {
 
 const limiter = new Map<string, RateLimitEntry>();
 
-// Cleanup stale entries every 60 seconds to prevent memory growth
+// Cleanup stale entries cada 60s con jitter aleatorio (±15s)
+// para evitar thundering herd si múltiples instancias limpian a la vez.
 if (typeof setInterval !== 'undefined') {
+  const CLEANUP_INTERVAL = 60_000;
+  const JITTER = Math.floor(Math.random() * 30_000) - 15_000; // -15s a +15s
+  const interval = Math.max(CLEANUP_INTERVAL + JITTER, 30_000);
+
   setInterval(() => {
     const now = Date.now();
     for (const [ip, entry] of limiter) {
@@ -14,9 +19,19 @@ if (typeof setInterval !== 'undefined') {
         limiter.delete(ip);
       }
     }
-  }, 60 * 1000);
+  }, interval);
 }
 
+/**
+ * Rate limiter en memoria.
+ *
+ * ⚠️ Limitación: En entornos serverless con múltiples instancias (Vercel, EasyPanel
+ * con auto-scaling), cada instancia tiene su propio Map. Un atacante puede rotar
+ * requests a través de diferentes instancias para evadir el límite.
+ *
+ * Para entornos multi-instancia, considera migrar a un almacén externo compartido
+ * como Upstash Redis o Vercel KV.
+ */
 export function checkRateLimit(
   ip: string,
   maxRequests = 3,

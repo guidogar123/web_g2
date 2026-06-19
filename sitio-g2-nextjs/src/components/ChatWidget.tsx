@@ -6,19 +6,19 @@ import '@n8n/chat/style.css';
 
 export default function ChatWidget() {
   useEffect(() => {
-    const webhookUrl = process.env.NEXT_PUBLIC_N8N_CHAT_WEBHOOK_URL;
-    if (!webhookUrl) {
-      console.warn(
-        '[ChatWidget] NEXT_PUBLIC_N8N_CHAT_WEBHOOK_URL not set — chat disabled'
-      );
-      return;
-    }
     try {
       createChat({
-        webhookUrl,
+        // Proxy server-side — la URL real del webhook (N8N_WEBHOOK_URL) es
+        // server-only y nunca se expone al cliente. Si n8n no está configurado
+        // el proxy responde 503 y @n8n/chat muestra un error graceful.
+        webhookUrl: '/api/webhook/n8n/chat',
         mode: 'window',
         chatInputKey: 'chatInput',
-        metadata: {},
+        metadata: {
+          page: window.location.pathname,
+          referrer: document.referrer || '(directo)',
+          ciudad: window.location.pathname.split('/')[1] || 'home',
+        },
         showWelcomeScreen: true,
         initialMessages: [
           '¡Hola! Soy Agente g2, el asistente virtual de G2Intelligence. ¿En qué puedo ayudarte hoy?',

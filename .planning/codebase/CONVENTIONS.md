@@ -1,223 +1,105 @@
 # Coding Conventions
 
-**Analysis Date:** 2026-04-03
-
-## Naming Patterns
-
-**Files:**
-- Component files: PascalCase (e.g., `Navigation.tsx`, `ScheduleModal.tsx`)
-- UI component files: kebab-case (e.g., `button.tsx`, `alert-dialog.tsx`)
-- Hook files: kebab-case with `use-` prefix (e.g., `use-toast.ts`)
-- Utility files: camelCase (e.g., `utils.ts`)
-- Section/page files: PascalCase (e.g., `Hero.tsx`, `Contacto.tsx`, `Equipo.tsx`)
-
-**Functions:**
-- React functional components: PascalCase (e.g., `App`, `Navigation`, `ScheduleModal`)
-- Regular functions: camelCase (e.g., `getAvailableDays()`, `handleSubmit()`)
-- Event handlers: camelCase with `handle` prefix (e.g., `handleScroll()`, `handleSubmit()`, `scrollToSection()`)
-
-**Variables:**
-- Component props: camelCase (e.g., `isOpen`, `onClose`, `formData`)
-- State variables: camelCase (e.g., `isScrolled`, `isMobileMenuOpen`, `selectedTime`)
-- Constants: UPPER_SNAKE_CASE (e.g., `COOLDOWN_MS`, `BAN_MS`, `COOLDOWN_KEY`)
-- Objects/arrays: camelCase (e.g., `navLinks`, `formData`, `timeSlots`, `particles`)
-
-**Types:**
-- Interfaces: PascalCase with suffix `Props` for component props (e.g., `ScheduleModalProps`)
-- Type aliases: PascalCase (e.g., `ClassValue`)
-- Enums: not commonly used, follow PascalCase
-
-## Code Style
-
-**Formatting:**
-- ESLint with Flat Config (ESLint 9.39.1)
-- No Prettier detected — formatting via ESLint rules
-- Indentation: 2 spaces (standard Node.js/TypeScript convention)
-- Line length: follows ESLint defaults
-- Semicolons: required at statement ends
-
-**Linting:**
-- Config file: `eslint.config.js` (Flat Config format)
-- Active rules:
-  - `@eslint/js` recommended
-  - `typescript-eslint` recommended
-  - `eslint-plugin-react-hooks` recommended
-  - `eslint-plugin-react-refresh` with Vite support
-- Target: `ES2020` for language features
-- Browser globals enabled
-
-**Key linting rules:**
-- Unused variables: caught (`noUnusedLocals`, `noUnusedParameters` in TypeScript)
-- React Hooks rules enforced (dependencies, rules of hooks)
-- React Refresh plugin ensures hot reload safety
-
-## Import Organization
-
-**Order:**
-1. React imports and external libraries (`import { useState } from 'react'`)
-2. Radix UI / UI component libraries (`import { Button } from '@/components/ui/button'`)
-3. Icons from lucide-react (`import { Menu, X, Brain } from 'lucide-react'`)
-4. Utility libraries (date-fns, clsx, etc.) (`import { format } from "date-fns"`)
-5. Custom hooks (`import { useToast } from '@/hooks/use-toast'`)
-6. Local components and utilities (`import Navigation from './sections/Navigation'`)
-7. Type imports (none currently explicit with `import type`, but could be used)
-
-**Path Aliases:**
-- `@/*` maps to `./src/*` (configured in `tsconfig.json`)
-- Example: `@/components/ui/button` → `src/components/ui/button.tsx`
-- Consistently used across all imports
-
-## Error Handling
-
-**Patterns:**
-- Try-catch blocks for async operations (e.g., fetch requests in `ScheduleModal`)
-- `try-finally` for cleanup (e.g., setting `setLoading(false)` in finally block)
-- Toast notifications for user-facing errors: `toast.error()`, `toast.success()` via sonner
-- Silent error handling with toast fallback (e.g., "Error al agendar. Intenta de nuevo.")
-- No error logging to console visible in production code; errors wrapped in try-catch
-
-Example from `ScheduleModal.tsx`:
-```typescript
-try {
-  const response = await fetch('...');
-  if (response.ok) {
-    toast.success("¡Agendado exitosamente!");
-  } else {
-    throw new Error();
-  }
-} catch (error) {
-  toast.error("Error al agendar. Intenta de nuevo.");
-} finally {
-  setLoading(false);
-}
-```
-
-## Logging
-
-**Framework:** No explicit logging framework; using browser console indirectly via React development tools
-- No `console.log()` calls visible in production code
-- Development logging assumed via React DevTools and browser console
-- Toast notifications (`sonner`) used for user feedback instead of console
-
-## Comments
-
-**When to Comment:**
-- Code is self-documenting; minimal comments
-- Comments appear only when logic is non-obvious (e.g., particle animation in Hero.tsx)
-- No JSDoc comments observed in codebase
-
-**Observed pattern:**
-- Comments explain "why" not "what" (e.g., "Lead time: 2 business days (skipping Sundays)")
-- Inline comments for complex calculations or performance optimizations
-
-Example from `Hero.tsx`:
-```typescript
-// Particle system
-// Render every 2nd frame for performance (30fps)
-```
-
-## Function Design
-
-**Size:** Functions generally kept small and focused
-- Average function length: 20-50 lines
-- Longer functions handle single concerns (e.g., form submission with validation)
-
-**Parameters:**
-- Destructured props for React components (e.g., `{ isOpen, onClose }`)
-- Single object parameter for form data instead of multiple parameters
-- Example: `setFormData({ ...formData, nombre: e.target.value })`
-
-**Return Values:**
-- Components return JSX elements
-- Hooks return values or [state, setState] pairs
-- Utility functions return primitives or objects
-- Explicit return types on TypeScript functions
-
-Example from `Navigation.tsx`:
-```typescript
-const navLinks = [
-  { name: 'Inicio', href: '#hero' },
-  { name: 'Servicios', href: '#servicios' },
-  // ...
-];
-```
-
-## Module Design
-
-**Exports:**
-- Default exports for React components (e.g., `export default Navigation`)
-- Named exports for utilities (e.g., `export { Button, buttonVariants }` in ui components)
-- Each UI component exports the component and its variants (CVA-based)
-
-**Barrel Files:**
-- Not explicitly used in current structure
-- UI components are imported directly from their individual files
-
-**Component Structure:**
-- One component per file
-- UI primitives in `src/components/ui/`
-- Feature components in `src/sections/`
-- Modal/dialog patterns in `src/components/`
-
-## Tailwind CSS
-
-**Styling approach:** Utility-first with Tailwind CSS 3.4.19
-- All styling via Tailwind classes in `className` attributes
-- No separate CSS files for components (uses `index.css` for globals)
-- Custom CSS variables defined in `:root` in `index.css` for theme colors
-- Class Variance Authority (CVA) used for component variants (e.g., button variants)
-
-**Example pattern from `button.tsx`:**
-```typescript
-const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50",
-  {
-    variants: {
-      variant: { default: "...", destructive: "...", outline: "..." },
-      size: { default: "...", sm: "...", lg: "..." },
-    },
-    defaultVariants: { variant: "default", size: "default" },
-  }
-);
-```
-
-**Theme colors:**
-- Primary: `--primary: 160 84% 39%` (emerald green)
-- Accent: `--accent: 160 84% 39%` (same as primary)
-- Background: `--background: 0 0% 4%` (near black)
-- Foreground: `--foreground: 0 0% 98%` (near white)
-- All colors use CSS custom properties
-
-## State Management
-
-**Pattern:** React hooks only (useState, useRef, useEffect)
-- No Redux or Context API
-- Local component state for form inputs and UI toggles
-- Refs for DOM elements (e.g., canvas, intersection observers)
-
-**Example from `ScheduleModal.tsx`:**
-```typescript
-const [date, setDate] = useState<Date | undefined>(availableDays[0]);
-const [selectedTime, setSelectedTime] = useState<string>("10:00");
-const [loading, setLoading] = useState(false);
-const [formData, setFormData] = useState({
-  nombre: '',
-  email: '',
-  telefono: '',
-  empresa: '',
-});
-```
+**Analysis Date:** 2026-06-19
 
 ## TypeScript Configuration
 
-**Strict mode enabled:**
-- `"strict": true` — all strict type checks active
-- `"noUnusedLocals": true` — unused variables flagged
-- `"noUnusedParameters": true` — unused function parameters flagged
-- `"noFallthroughCasesInSwitch": true` — switch case fallthrough prevented
+- **Strict mode** enabled (`tsconfig.json`: `strict: true`)
+- **Target:** ES2017
+- **Module resolution:** `bundler`
+- **Path alias:** `@/*` maps to `./src/*`
+- **JSX:** `react-jsx` (automatic JSX transform)
+- **No unchecked index access** — no `noUncheckedIndexedAccess` observed
+- **Incremental builds** enabled
 
-**Target:** ES2022 (modern JavaScript features available)
+## Naming Conventions
 
----
+| Pattern | Convention | Examples |
+|---|---|---|
+| Files (components) | PascalCase | `HomeClient.tsx`, `ChatWidget.tsx` |
+| Files (pages) | kebab-case for dirs | `[ciudad]/`, `politica-privacidad/` |
+| Files (lib/utils) | kebab-case | `rate-limit.ts`, `schemas.ts` |
+| Components | PascalCase, default export | `export default function Hero()` |
+| Interfaces/Types | PascalCase | `CityData`, `FormData`, `RateLimitEntry` |
+| Functions | camelCase | `checkRateLimit`, `scrollToSection`, `cn` |
+| Constants | UPPER_SNAKE_CASE | `COOLDOWN_KEY`, `BAN_KEY`, `CITIES` |
+| CSS classes | Tailwind utility classes | No custom CSS class names |
 
-*Convention analysis: 2026-04-03*
+## React Conventions
+
+### Server vs Client Components
+- **Server components by default** — Only add `'use client'` when needed
+- **Explicit client boundary**: `'use client'` directive on every client file
+- **Client boundary minimized**: `HomeClient.tsx` is the single client orchestrator
+- **Server components** handle metadata, data fetching, static generation
+- **City pages** are fully server-rendered (no `'use client'`)
+
+### Component Patterns
+- **Default exports** consistently used (not named exports)
+- **Props interfaces** defined locally in component file (or imported from types)
+- **Composition** over inheritance — sections composed in orchestrator
+- **Dynamic imports** for heavy client components: `dynamic(() => import('./ChatWidget'), { ssr: false })`
+- **useState** for local UI state (forms, modals, mobile menu)
+- **useEffect** for side effects (scroll detection, canvas init, widget init)
+- **useRef** for DOM references (canvas element)
+
+### Form Patterns (FORM-* convention referenced in code comments)
+- **FORM-01, FORM-02**: D-locked payload shapes for contact/scheduling
+- **FORM-03**: Dual validation — client-side Zod + server-side Zod
+- **FORM-04**: User-friendly error messages via toast + inline field errors
+- **FORM-05**: API route proxy pattern — never POST directly to n8n from client
+- **FORM-06**: Rate limiting + audit logging (no PII stored)
+
+## Styling Conventions
+
+### Tailwind CSS v4
+- **CSS-first** configuration via `@import "tailwindcss"` (not JS config)
+- **OKLCH color tokens** defined in `globals.css` `:root`
+- **Dark theme by default** — site is always dark (`#050505` background)
+- **`@theme inline`** block for custom design tokens (colors, radius, fonts)
+- **`@layer base`** for global element styles
+- **`@custom-variant dark`** for dark mode variant
+
+### shadcn/ui (Radix Nova style)
+- **`components.json`**: `style: "radix-nova"`, `rsc: true`
+- **`cn()` utility** from `@/lib/utils.ts` for class merging
+- **`class-variance-authority`** for component variant APIs
+- **All UI primitives** in `@/components/ui/` directory
+- **`radix-ui: ^1.4.3`** as monolithic Radix package
+
+### Design Tokens
+- **Emerald brand**: `#10b981` / `oklch(0.64 0.157 162)` — primary, accent, ring
+- **Background**: `#050505` / `oklch(0.02 0 0)` — void black
+- **Cards/Surfaces**: `#0d1117` / `oklch(0.09 0.008 264)` — deep slate
+- **Borders**: `white/5` to `white/10` opacity
+- **Border radius**: `0.625rem` base with scale multipliers
+
+## File Organization
+
+- **Components** by domain: `sections/` (page sections), `ui/` (primitives), root (widgets/orchestrators)
+- **Pages** by route structure in `app/` directory
+- **Shared logic** in `lib/`
+- **UI primitives** isolated in `ui/` — easily swappable via shadcn/ui
+- **Each component** is a single file with default export
+
+## Import Patterns
+
+- **`@/` alias** for all internal imports: `@/components/ui/button`, `@/lib/schemas`
+- **Type imports** use `import type { ... }` syntax
+- **Lucide icons** imported individually: `import { Mail, Phone } from 'lucide-react'`
+- **CSS imports**: `import './globals.css'` in layout, `import '@n8n/chat/style.css'` in ChatWidget
+
+## Edge Cases & Gotchas
+
+1. **`headers()` is async in Next.js 16** — Must `await headers()` in API routes (documented in code comments)
+2. **Next.js 16 has breaking changes** — `AGENTS.md` warns agents to check `node_modules/next/dist/docs/`
+3. **`setInterval` guard** — Rate limiter cleanup checks `typeof setInterval !== 'undefined'` for SSR safety
+4. **City pages inline HTML** — Don't use shared section components; each city page is self-contained
+5. **Server-only env vars** — `N8N_WEBHOOK_URL` is never prefixed with `NEXT_PUBLIC_` to keep it server-only
+
+## Code Comments Style
+
+- **Section headers** using `{/* Hero */}`, `{/* Services */}` style for JSX organization
+- **Reference conventions** inline: `(per FORM-03, FORM-04)`, `(per FORM-05)`
+- **Implementation notes** for intentional decisions: `// Extract client IP for rate limiting (per FORM-06)`
+- **Minimal inline comments** — code is generally self-documenting

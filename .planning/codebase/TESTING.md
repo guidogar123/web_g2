@@ -1,287 +1,124 @@
-# Testing Patterns
+# Testing Status
 
-**Analysis Date:** 2026-04-03
+**Analysis Date:** 2026-06-19
 
-## Test Framework
+## Current State: NO TESTS
 
-**Runner:**
-- No test framework currently configured
-- No testing dependencies in `package.json`
-- No `jest.config.js`, `vitest.config.ts`, or similar test configuration files
+The project has **zero test infrastructure**:
 
-**Assertion Library:**
-- Not applicable — no testing framework detected
+| Aspect | Status |
+|---|---|
+| Test framework | ❌ Not installed |
+| Test files (*.test.*, *.spec.*) | ❌ None found |
+| Test scripts in package.json | ❌ Not defined |
+| Test dependencies in package.json | ❌ Not present |
+| E2E tests | ❌ Not configured |
+| Component tests | ❌ Not configured |
+| Integration tests | ❌ Not configured |
+| CI test step | ❌ Not configured |
 
-**Run Commands:**
-```bash
-npm run dev              # Start development server (Vite)
-npm run build           # Build production bundle
-npm run lint            # Run ESLint
-npm run preview         # Preview production build locally
-```
+## Why This Matters
 
-**Note:** Testing infrastructure not yet implemented. Only linting is configured.
+The following code is **critical to business operations** and has no test coverage:
 
-## Test File Organization
+### P0 Risk Areas (Customer-facing)
 
-**Current State:**
-- No test files found in codebase
-- No `*.test.*` or `*.spec.*` files in `src/` directory
-- Testing directory structure not established
+1. **Form validation logic** (`src/lib/schemas.ts`)
+   - `ContactSchema` — validating lead contact data
+   - `ScheduleSchema` — validating scheduling requests
+   - If broken: lost leads and scheduling revenue
 
-**Recommendation for Implementation:**
-- Co-locate test files with source files (same directory)
-- Naming convention: `ComponentName.test.tsx` or `ComponentName.spec.tsx`
-- Organize as:
-  ```
-  src/
-  ├── components/
-  │   ├── ScheduleModal.tsx
-  │   ├── ScheduleModal.test.tsx
-  │   └── ui/
-  │       ├── button.tsx
-  │       └── button.test.tsx
-  ├── sections/
-  │   ├── Navigation.tsx
-  │   ├── Navigation.test.tsx
-  │   └── ...
-  └── hooks/
-      ├── use-toast.ts
-      └── use-toast.test.ts
-  ```
+2. **Rate limiter** (`src/lib/rate-limit.ts`)
+   - In-memory `Map` with cleanup interval
+   - If broken: spam flood or legitimate user blocking
+   - Edge case: cleanup timer behavior in serverless environments
 
-## Current Testing Gaps
+3. **Form API routes** (`src/app/api/webhook/n8n/*/route.ts`)
+   - Request parsing, validation, rate limiting, n8n proxying
+   - Error handling paths (400, 429, 500 responses)
+   - If broken: complete form submission failure
 
-**What's NOT tested:**
-- React component rendering
-- User interactions (clicks, form submissions)
-- State management (useState, useEffect hooks)
-- Event handlers (handleScroll, handleSubmit)
-- API calls to n8n webhook (in `ScheduleModal.tsx`)
-- Toast notifications
-- Rate limiting logic (cooldown/ban system)
+4. **City data** (`src/app/[ciudad]/cities.ts`)
+   - 15-city static generation data array
+   - `getCityBySlug()` lookup function
+   - If broken: 404 on city pages or incorrect geo data
 
-**High-priority areas needing tests:**
-1. `ScheduleModal.tsx` — complex form with rate limiting
-2. `Navigation.tsx` — scroll detection and navigation
-3. `use-toast.ts` — custom hook for toast notifications
-4. Date/time selection logic in `ScheduleModal.tsx`
+### P1 Risk Areas
 
-## Testable Code Examples
+5. **Component rendering** (`src/components/`)
+   - Form components (Contacto, ScheduleModal)
+   - Chat widget initialization
+   - Navigation scroll behavior
+   - Hero canvas particle system
 
-### Example 1: ScheduleModal Component Logic
-**File:** `/c/Users/guido/OneDrive/G2INNOVATION/WEB_G2/Kimi_Agent_Diseño web G2Intelligence/app/src/components/ScheduleModal.tsx`
+## Recommended Test Strategy
 
-```typescript
-// This function is testable
-const getAvailableDays = (count: number) => {
-  const days = [];
-  let current = new Date();
+### Phase 1 — Unit Tests (Critical)
 
-  // Lead time: 2 business days (skipping Sundays)
-  let leadCount = 0;
-  while (leadCount < 2) {
-    current.setDate(current.getDate() + 1);
-    if (current.getDay() !== 0) leadCount++;
-  }
+**Framework:** Vitest (lightweight, ESM-native, fast)
 
-  while (days.length < count) {
-    if (current.getDay() !== 0) {
-      days.push(new Date(current));
-    }
-    current.setDate(current.getDate() + 1);
-  }
-  return days;
-};
-```
+**Priority targets:**
+| Module | Test Type | Priority |
+|---|---|---|
+| `lib/schemas.ts` | Pure function (validation logic) | 🔴 P0 |
+| `lib/rate-limit.ts` | Pure function (rate limiting logic) | 🔴 P0 |
+| `app/[ciudad]/cities.ts` | Pure function (data + lookup) | 🔴 P0 |
+| `lib/utils.ts` | Pure function (cn utility) | 🟡 P2 |
 
-**Tests needed:**
-- Returns exactly N business days
-- Skips Sundays (day 0)
-- Respects 2-day lead time
-- Handles month/year boundaries
+### Phase 2 — Integration Tests (API Routes)
 
-### Example 2: Rate Limiting Logic
-**File:** `src/components/ScheduleModal.tsx`
+**Framework:** Vitest + `fetch` mock
 
-```typescript
-const checkRateLimit = () => {
-  const now = Date.now();
-  const banUntil = localStorage.getItem(BAN_KEY);
-  const lastSignal = localStorage.getItem(COOLDOWN_KEY);
+**Targets:**
+- Contact API route: valid request → 200, invalid body → 400, rate limited → 429
+- Schedule API route: same patterns
+- n8n proxy failure → 500
 
-  if (banUntil && now < parseInt(banUntil)) {
-    const remaining = Math.ceil((parseInt(banUntil) - now) / 1000 / 60);
-    toast.error(`Actividad limitada. Espera ${remaining} min.`);
-    return false;
-  }
+### Phase 3 — Component Tests
 
-  if (lastSignal && now - parseInt(lastSignal) < COOLDOWN_MS) {
-    localStorage.setItem(BAN_KEY, (now + BAN_MS).toString());
-    toast.error("Seguridad activada. Bloqueo de 5 min.");
-    return false;
-  }
-  return true;
-};
-```
+**Framework:** Vitest + @testing-library/react
 
-**Tests needed:**
-- Returns true when no previous request
-- Returns false and shows error when in cooldown (60s)
-- Sets ban flag after 2nd request in cooldown period (5 min ban)
-- Correctly calculates remaining time for error message
+**Targets (by priority):**
+1. `Contacto.tsx` — Form rendering, validation feedback, submission states
+2. `ScheduleModal.tsx` — Date selection, time slots, form validation
+3. `Navigation.tsx` — Scroll state, mobile menu toggle
+4. `ChatWidget.tsx` — Conditional init based on env var
 
-### Example 3: Navigation Scroll Detection
-**File:** `src/sections/Navigation.tsx`
+### Phase 4 — E2E Tests
 
-```typescript
-useEffect(() => {
-  const handleScroll = () => {
-    setIsScrolled(window.scrollY > 50);
-  };
-  window.addEventListener('scroll', handleScroll, { passive: true });
-  return () => window.removeEventListener('scroll', handleScroll);
-}, []);
-```
+**Framework:** Playwright
 
-**Tests needed:**
-- Event listener attached on mount
-- Event listener removed on unmount
-- `setIsScrolled(true)` when `scrollY > 50`
-- `setIsScrolled(false)` when `scrollY <= 50`
-- `passive: true` option set for scroll performance
+**Targets:**
+- Home page renders all sections
+- City page renders with correct city name
+- Form submission flow (happy path + error states)
+- Navigation scroll and mobile menu
+- Chat widget presence when configured
 
-### Example 4: Custom Hook (useToast)
-**File:** `src/hooks/use-toast.ts`
+## Dependencies Needed
 
-```typescript
-export function useToast() {
-  const toast = ({ title, description, variant }: ToastOptions) => {
-    if (variant === 'destructive') {
-      sonnerToast.error(title, { description });
-    } else {
-      sonnerToast.success(title, { description });
-    }
-  };
-  return { toast };
-}
-```
-
-**Tests needed:**
-- Calls `sonnerToast.error()` for destructive variant
-- Calls `sonnerToast.success()` for default variant
-- Passes title and description correctly
-- Returns toast function
-
-## Recommended Testing Setup
-
-**To implement testing, add:**
-
-```bash
-npm install --save-dev vitest @testing-library/react @testing-library/jest-dom
-```
-
-**Configuration file: `vitest.config.ts`**
-```typescript
-import { defineConfig } from 'vitest/config'
-import react from '@vitejs/plugin-react'
-import path from 'path'
-
-export default defineConfig({
-  plugins: [react()],
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: [],
-  },
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-    },
-  },
-})
-```
-
-**Test script in `package.json`:**
 ```json
 {
-  "scripts": {
-    "test": "vitest",
-    "test:ui": "vitest --ui",
-    "test:coverage": "vitest --coverage"
+  "devDependencies": {
+    "vitest": "^3",
+    "@testing-library/react": "^16",
+    "@testing-library/jest-dom": "^6",
+    "jsdom": "^25",
+    "@playwright/test": "^1"
   }
 }
 ```
 
-## Mocking Recommendations
+## Quick Start
 
-**What to mock:**
-- `localStorage` for rate limiting tests
-- `fetch()` for n8n webhook calls
-- `sonner` toast notifications
-- `window.addEventListener` for scroll detection
-- `IntersectionObserver` for visibility detection (used in Contacto.tsx)
+```bash
+# Install test dependencies
+npm install -D vitest @testing-library/react @testing-library/jest-dom jsdom
 
-**What NOT to mock:**
-- React hooks (useState, useEffect, useRef, useCallback)
-- DOM elements (use React Testing Library to render and query)
-- Component props and state changes
-- Date/time generation (test with actual dates)
+# Add to package.json scripts
+# "test": "vitest run",
+# "test:watch": "vitest"
 
-## Manual Testing Checklist
-
-Since no automated tests exist, here's what should be manually tested:
-
-**ScheduleModal Component:**
-- [ ] Modal opens/closes correctly
-- [ ] Date selection updates state
-- [ ] Time slot selection updates state
-- [ ] Form validation requires all fields
-- [ ] Submit button disabled while loading
-- [ ] Rate limiting activates after 2 requests in 60s
-- [ ] 5-minute ban message shows after rate limit
-- [ ] Form data clears after successful submission
-- [ ] n8n webhook receives correct payload
-
-**Navigation Component:**
-- [ ] Navigation bar transparent on page load
-- [ ] Navigation bar shows background after scrolling 50px
-- [ ] Mobile menu opens/closes
-- [ ] Menu links scroll to correct sections smoothly
-- [ ] Menu closes after clicking a link (mobile)
-- [ ] Hover effects work on desktop
-
-**Form Components (Contacto):**
-- [ ] Form fields accept input
-- [ ] Form validates required fields
-- [ ] Submit shows loading state
-- [ ] Success toast appears on submit
-- [ ] Form clears after submission
-- [ ] Scroll position shows section when visible
-
-**Particle Animation (Hero):**
-- [ ] Canvas renders correctly
-- [ ] Particles animate smoothly
-- [ ] Canvas resizes on window resize
-- [ ] Animation cleanup on unmount
-- [ ] Performance acceptable (30fps target)
-
-## Coverage Targets
-
-**Current coverage:** 0% — no tests implemented
-
-**Recommended targets after implementation:**
-- Statements: 70%+
-- Branches: 60%+
-- Functions: 70%+
-- Lines: 70%+
-
-**Priority for high-coverage areas:**
-1. `src/components/ScheduleModal.tsx` — 90%+ (critical user interaction)
-2. `src/sections/Navigation.tsx` — 80%+ (core navigation)
-3. `src/hooks/use-toast.ts` — 100% (simple, testable hook)
-4. `src/sections/Contacto.tsx` — 80%+ (form handling)
-
----
-
-*Testing analysis: 2026-04-03*
+# Run tests
+npm test
+```

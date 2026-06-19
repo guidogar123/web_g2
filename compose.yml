@@ -1,0 +1,10 @@
+services:
+  web-g2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        N8N_WEBHOOK_URL: ${N8N_WEBHOOK_URL}
+    image: web-g2:latest
+    ports:
+      - "80:80"

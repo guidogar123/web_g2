@@ -17,7 +17,7 @@ jobs:
           host: 82.25.86.23
           username: root
           key: ${{ secrets.WEBG2_SSH_KEY }}
-          source: "sitio-g2-nextjs"
+          source: "Dockerfile,compose.yml,sitio-g2-nextjs"
           target: "/etc/easypanel/projects/posgresql/web_g2/code"
           strip_components: 0
 

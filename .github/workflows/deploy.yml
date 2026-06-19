@@ -1,0 +1,38 @@
+name: Deploy web_g2
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy via git pull
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 82.25.86.23
+          username: root
+          key: ${{ secrets.WEBG2_SSH_KEY }}
+          envs: N8N_WEBHOOK_URL
+          script: |
+            cd /etc/easypanel/projects/posgresql/web_g2/code
+            git stash --include-untracked 2>/dev/null || true
+            git pull origin main
+            cd sitio-g2-nextjs && bash deploy-webg2.sh
+
+      - name: Verify site responds
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 82.25.86.23
+          username: root
+          key: ${{ secrets.WEBG2_SSH_KEY }}
+          script: |
+            for i in 1 2 3; do
+              curl -sfI https://g2intelligence.co && echo "✅ OK" && exit 0
+              sleep 5
+            done
+            echo "❌ Site not responding" && exit 1

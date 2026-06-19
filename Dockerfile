@@ -3,9 +3,6 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# NEXT_PUBLIC vars are embedded in the client bundle at build time
-ENV NEXT_PUBLIC_N8N_CHAT_WEBHOOK_URL=https://n8n-n8n.ektnbd.easypanel.host/webhook/1c0360f1-fe27-42a5-9d24-7b52aebe9dd2/chat
-
 COPY sitio-g2-nextjs/package*.json ./
 RUN npm ci
 
@@ -17,8 +14,12 @@ FROM node:20-alpine AS runner
 
 WORKDIR /app
 ENV NODE_ENV=production
-# Server-only webhook URL (set also in EasyPanel env vars for runtime)
-ENV N8N_WEBHOOK_URL=https://n8n-n8n.ektnbd.easypanel.host/webhook/1c0360f1-fe27-42a5-9d24-7b52aebe9dd2/chat
+# N8N_WEBHOOK_URL debe configurarse como variable de entorno en EasyPanel.
+# Usar build args: --build-arg N8N_WEBHOOK_URL=...
+# O configurarlo como environment variable en el servicio de EasyPanel.
+# Ya no se necesita NEXT_PUBLIC_N8N_CHAT_WEBHOOK_URL - el chat usa proxy interno.
+ARG N8N_WEBHOOK_URL
+ENV N8N_WEBHOOK_URL=${N8N_WEBHOOK_URL}
 
 # Copy standalone output
 COPY --from=builder /app/.next/standalone ./

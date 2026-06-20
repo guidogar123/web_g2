@@ -1,0 +1,39 @@
+name: Deploy web_g2 to VPS
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Next.js app
+        run: |
+          cd sitio-g2-nextjs
+          npm ci
+          npm run build
+
+      - name: Sync to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: 82.25.86.23
+          username: root
+          key: ${{ secrets.WEBG2_SSH_KEY }}
+          source: "."
+          target: "/root/web_g2"
+          strip_components: 0
+
+      - name: Deploy on VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 82.25.86.23
+          username: root
+          key: ${{ secrets.WEBG2_SSH_KEY }}
+          script: |
+            cd /root/web_g2
+            export N8N_WEBHOOK_URL="${{ secrets.N8N_WEBHOOK_URL }}"
+            export NEXT_PUBLIC_N8N_CHAT_WEBHOOK_URL="https://n8n-n8n.ektnbd.easypanel.host/webhook/1c0360f1-fe27-42a5-9d24-7b52aebe9dd2/chat"
+            docker-compose -f docker-compose.yml up -d --build

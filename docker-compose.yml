@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  web_g2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        N8N_WEBHOOK_URL: ${N8N_WEBHOOK_URL}
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      N8N_WEBHOOK_URL: ${N8N_WEBHOOK_URL}
+      NEXT_PUBLIC_N8N_CHAT_WEBHOOK_URL: ${NEXT_PUBLIC_N8N_CHAT_WEBHOOK_URL}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

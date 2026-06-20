@@ -11,13 +11,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build Next.js
+        run: |
+          cd sitio-g2-nextjs
+          npm ci
+          npm run build
+        env:
+          N8N_WEBHOOK_URL: ${{ secrets.N8N_WEBHOOK }}
+          NEXT_PUBLIC_N8N_CHAT_WEBHOOK_URL: https://n8n-n8n.ektnbd.easypanel.host/webhook/1c0360f1-fe27-42a5-9d24-7b52aebe9dd2/chat
+
       - name: Sync files to VPS
         uses: appleboy/scp-action@v0.1.7
         with:
           host: 82.25.86.23
           username: root
           key: ${{ secrets.WEBG2_SSH_KEY }}
-          source: "Dockerfile,compose.yml,sitio-g2-nextjs"
+          source: "Dockerfile,sitio-g2-nextjs"
           target: "/etc/easypanel/projects/posgresql/web_g2/code"
           strip_components: 0
 
@@ -27,20 +41,15 @@ jobs:
           host: 82.25.86.23
           username: root
           key: ${{ secrets.WEBG2_SSH_KEY }}
-          envs: N8N_WEBHOOK_URL
           script: |
-            cd /etc/easypanel/projects/posgresql/web_g2/code/sitio-g2-nextjs
-            bash deploy-webg2.sh
+            export N8N_WEBHOOK_URL="${{ secrets.N8N_WEBHOOK }}"
+            cd /etc/easypanel/projects/posgresql/web_g2/code
+            docker build -t easypanel/posgresql/web_g2:latest --build-arg N8N_WEBHOOK_URL="$N8N_WEBHOOK_URL" --no-cache .
+            docker service update --image easypanel/posgresql/web_g2:latest --force posgresql_web_g2
 
-      - name: Verify site responds
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: 82.25.86.23
-          username: root
-          key: ${{ secrets.WEBG2_SSH_KEY }}
-          script: |
-            for i in 1 2 3; do
-              curl -sfI https://g2intelligence.co && echo "✅ OK" && exit 0
-              sleep 5
-            done
-            echo "❌ Site not responding" && exit 1
+      - name: Verify chat works
+        run: |
+          sleep 20
+          STATUS=$(curl -sS -o /dev/null -w "%{http_code}" --max-time 10 -X POST https://g2intelligence.co/api/webhook/n8n/chat -H "Content-Type: application/json" -d '{"action":"sendMessage","sessionId":"ci-test","chatInput":"hola"}')
+          echo "Chat proxy HTTP: $STATUS"
+          [ "$STATUS" = "200" ] || [ "$STATUS" = "201" ] && echo "✅ Chat OK" || (echo "❌ Chat still $STATUS" && exit 1)

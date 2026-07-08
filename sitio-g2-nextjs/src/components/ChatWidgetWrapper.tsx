@@ -7,6 +7,7 @@ const ChatWidget = dynamic(() => import('./ChatWidget'), {
   loading: () => null,
 });
 
+// CHAT DESACTIVADO TEMPORALMENTE — n8n pendiente de configuración
 export default function ChatWidgetWrapper() {
-  return <ChatWidget />;
+  return null;
 }

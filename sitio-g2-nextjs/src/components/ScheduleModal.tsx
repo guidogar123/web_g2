@@ -9,11 +9,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Calendar as CalendarIcon, Clock, User, Mail, Phone, Loader2, Sparkles } from 'lucide-react';
+import { Calendar as CalendarIcon, Clock, User, Mail, Phone, Loader2, Sparkles, MessageCircle } from 'lucide-react';
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { ScheduleSchema } from "@/lib/schemas";
+
+const WSP_NUMBER = '573116783068';
+const WSP_MESSAGE = encodeURIComponent('Hola, me gustaría agendar una llamada de consultoría con G2 Intelligence.');
 
 interface ScheduleModalProps {
     isOpen: boolean;
@@ -145,6 +148,46 @@ export const ScheduleModal = ({ isOpen, onClose }: ScheduleModalProps) => {
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
+            <DialogContent className="sm:max-w-[480px] bg-[#0d1117] border-white/10 text-white p-0 overflow-hidden rounded-3xl backdrop-blur-xl">
+                <div className="flex flex-col">
+                    {/* Header */}
+                    <div className="bg-emerald-500/10 p-8 flex flex-col items-center text-center border-b border-white/10">
+                        <div className="w-14 h-14 rounded-2xl bg-emerald-500/20 flex items-center justify-center mb-5">
+                            <CalendarIcon className="w-7 h-7 text-emerald-400" />
+                        </div>
+                        <h3 className="text-xl font-bold mb-2">Agenda tu sesión</h3>
+                        <p className="text-white/40 text-sm leading-relaxed">
+                            Consultoría estratégica de 30 minutos.<br />
+                            Escríbenos por WhatsApp y coordinamos.
+                        </p>
+                        <div className="flex items-center gap-4 mt-5 text-xs text-white/40">
+                            <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5 text-emerald-400" /> 30 min</span>
+                            <span className="flex items-center gap-1.5"><Sparkles className="w-3.5 h-3.5 text-emerald-400" /> Estrategia IA</span>
+                        </div>
+                    </div>
+
+                    {/* WhatsApp CTA */}
+                    <div className="p-8 flex flex-col items-center gap-4">
+                        <a
+                            href={`https://wa.me/${WSP_NUMBER}?text=${WSP_MESSAGE}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={onClose}
+                            className="w-full flex items-center justify-center gap-3 bg-[#25D366] hover:bg-[#20c05c] text-white font-bold text-base h-14 rounded-2xl transition-all duration-300 shadow-lg shadow-[#25D366]/20"
+                        >
+                            <MessageCircle className="w-5 h-5" />
+                            Chatear por WhatsApp
+                        </a>
+                        <p className="text-white/20 text-xs">+57 311 678 3068 · Respuesta inmediata</p>
+                    </div>
+                </div>
+            </DialogContent>
+        </Dialog>
+    );
+
+    /* FORMULARIO INACTIVO — reactivar cuando se configure el webhook de agendamiento
+    return (
+        <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-[800px] bg-[#0d1117] border-white/10 text-white p-0 overflow-hidden rounded-3xl backdrop-blur-xl max-h-[90vh] overflow-y-auto">
                 <div className="flex flex-col md:flex-row min-h-full">
                     <div className="md:w-[240px] bg-emerald-500/10 p-8 flex flex-col justify-start border-r border-white/10">
@@ -174,117 +217,71 @@ export const ScheduleModal = ({ isOpen, onClose }: ScheduleModalProps) => {
                                     <Label className="text-[10px] uppercase tracking-widest text-white/30 font-bold">Concepto / Nombre</Label>
                                     <div className="relative">
                                         <User className="absolute left-3 top-3 w-4 h-4 text-white/20" />
-                                        <Input
-                                            placeholder="Tu nombre"
-                                            value={formData.nombre}
+                                        <Input placeholder="Tu nombre" value={formData.nombre}
                                             onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
-                                            required
-                                            className="pl-10 bg-white/5 border-white/10 h-11 rounded-xl"
-                                        />
+                                            required className="pl-10 bg-white/5 border-white/10 h-11 rounded-xl" />
                                     </div>
-                                    {errors.nombre && (
-                                        <p className="text-red-400 text-xs mt-1">{errors.nombre}</p>
-                                    )}
+                                    {errors.nombre && <p className="text-red-400 text-xs mt-1">{errors.nombre}</p>}
                                 </div>
                                 <div className="space-y-1.5">
                                     <Label className="text-[10px] uppercase tracking-widest text-white/30 font-bold">Email Corporativo</Label>
                                     <div className="relative">
                                         <Mail className="absolute left-3 top-3 w-4 h-4 text-white/20" />
-                                        <Input
-                                            type="email"
-                                            placeholder="tu@empresa.com"
-                                            value={formData.email}
+                                        <Input type="email" placeholder="tu@empresa.com" value={formData.email}
                                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                            required
-                                            className="pl-10 bg-white/5 border-white/10 h-11 rounded-xl"
-                                        />
+                                            required className="pl-10 bg-white/5 border-white/10 h-11 rounded-xl" />
                                     </div>
-                                    {errors.email && (
-                                        <p className="text-red-400 text-xs mt-1">{errors.email}</p>
-                                    )}
+                                    {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email}</p>}
                                 </div>
                                 <div className="space-y-1.5">
                                     <Label className="text-[10px] uppercase tracking-widest text-white/30 font-bold">Teléfono / WhatsApp</Label>
                                     <div className="relative">
                                         <Phone className="absolute left-3 top-3 w-4 h-4 text-white/20" />
-                                        <Input
-                                            type="tel"
-                                            placeholder="+57..."
-                                            value={formData.telefono}
+                                        <Input type="tel" placeholder="+57..." value={formData.telefono}
                                             onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
-                                            required
-                                            className="pl-10 bg-white/5 border-white/10 h-11 rounded-xl"
-                                        />
+                                            required className="pl-10 bg-white/5 border-white/10 h-11 rounded-xl" />
                                     </div>
-                                    {errors.telefono && (
-                                        <p className="text-red-400 text-xs mt-1">{errors.telefono}</p>
-                                    )}
+                                    {errors.telefono && <p className="text-red-400 text-xs mt-1">{errors.telefono}</p>}
                                 </div>
                             </div>
-
                             <div className="space-y-6 pt-4 border-t border-white/5">
                                 <div className="space-y-3">
                                     <Label className="text-[10px] uppercase tracking-widest text-white/30 font-bold block">1. Escoge el día</Label>
                                     <div className="flex gap-3">
                                         {availableDays.map((d) => (
-                                            <button
-                                                key={d.toISOString()}
-                                                type="button"
-                                                onClick={() => setDate(d)}
-                                                className={cn(
-                                                    "flex-1 p-4 rounded-xl border transition-all duration-300 flex flex-col items-center gap-1",
+                                            <button key={d.toISOString()} type="button" onClick={() => setDate(d)}
+                                                className={cn("flex-1 p-4 rounded-xl border transition-all duration-300 flex flex-col items-center gap-1",
                                                     date?.toDateString() === d.toDateString()
                                                         ? "bg-emerald-500/20 border-emerald-500 text-emerald-400"
-                                                        : "bg-white/5 border-white/10 text-white/40 hover:bg-white/10"
-                                                )}
-                                            >
-                                                <span className="text-[9px] uppercase tracking-tighter font-bold opacity-60">
-                                                    {format(d, "EEEE", { locale: es })}
-                                                </span>
-                                                <span className="text-lg font-bold">
-                                                    {format(d, "d 'de' MMM", { locale: es })}
-                                                </span>
+                                                        : "bg-white/5 border-white/10 text-white/40 hover:bg-white/10")}>
+                                                <span className="text-[9px] uppercase tracking-tighter font-bold opacity-60">{format(d, "EEEE", { locale: es })}</span>
+                                                <span className="text-lg font-bold">{format(d, "d 'de' MMM", { locale: es })}</span>
                                             </button>
                                         ))}
                                     </div>
                                 </div>
-
                                 <div className="space-y-4">
                                     <Label className="text-[10px] uppercase tracking-widest text-white/30 font-bold block">2. Escoge el horario (6AM - 8PM)</Label>
                                     <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-2 max-h-[180px] overflow-y-auto pr-2">
                                         {timeSlots.map((time) => (
-                                            <button
-                                                key={time}
-                                                type="button"
-                                                onClick={() => setSelectedTime(time)}
-                                                className={cn(
-                                                    "h-9 text-[11px] font-medium rounded-lg transition-all border",
+                                            <button key={time} type="button" onClick={() => setSelectedTime(time)}
+                                                className={cn("h-9 text-[11px] font-medium rounded-lg transition-all border",
                                                     selectedTime === time
                                                         ? "bg-emerald-500 border-emerald-500 text-white"
-                                                        : "bg-white/5 border-white/10 text-white/30 hover:bg-white/10 hover:text-white"
-                                                )}
-                                            >
+                                                        : "bg-white/5 border-white/10 text-white/30 hover:bg-white/10 hover:text-white")}>
                                                 {time}
                                             </button>
                                         ))}
                                     </div>
                                 </div>
                             </div>
-
                             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 bg-emerald-500/5 border border-emerald-500/20 rounded-2xl">
                                 <div className="text-center sm:text-left">
                                     <span className="text-white/30 block uppercase text-[9px] tracking-widest mb-1">Tu sesión:</span>
-                                    {date && (
-                                        <span className="text-emerald-400 font-bold text-base">
-                                            {format(date, "d 'de' MMMM", { locale: es })} @ {selectedTime} hs
-                                        </span>
-                                    )}
+                                    {date && <span className="text-emerald-400 font-bold text-base">{format(date, "d 'de' MMMM", { locale: es })} @ {selectedTime} hs</span>}
                                 </div>
-                                <Button
-                                    type="submit"
-                                    disabled={loading}
-                                    className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white px-8 h-12 rounded-xl font-bold transition-all duration-300"
-                                >
+                                <Button type="submit" disabled={loading}
+                                    className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white px-8 h-12 rounded-xl font-bold transition-all duration-300">
                                     {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Confirmar Cita"}
                                 </Button>
                             </div>
@@ -294,6 +291,7 @@ export const ScheduleModal = ({ isOpen, onClose }: ScheduleModalProps) => {
             </DialogContent>
         </Dialog>
     );
+    */
 };
 
 export default ScheduleModal;

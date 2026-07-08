@@ -11,7 +11,7 @@ export default function ChatWidget() {
         // Proxy server-side — la URL real del webhook (N8N_WEBHOOK_URL) es
         // server-only y nunca se expone al cliente. Si n8n no está configurado
         // el proxy responde 503 y @n8n/chat muestra un error graceful.
-        webhookUrl: '/api/webhook/n8n/chat',
+        webhookUrl: process.env.NEXT_PUBLIC_N8N_CHAT_WEBHOOK_URL ?? '',
         mode: 'window',
         chatInputKey: 'chatInput',
         metadata: {

@@ -148,7 +148,7 @@ export default function TerminosServicio() {
           <h2 className="text-2xl font-bold text-gray-900 mb-4">12. Contacto</h2>
           <div className="bg-gray-50 p-6 rounded-lg space-y-2">
             <p>
-              <strong>Empresa:</strong> G2 Intelligence S.A.S.
+              <strong>Empresa:</strong> G2 Intelligence S.A.S. (NIT 94527160-5)
             </p>
             <p>
               <strong>Correo Electrónico:</strong> <a href="mailto:hola@g2intelligence.co" className="text-blue-600 hover:underline">hola@g2intelligence.co</a>

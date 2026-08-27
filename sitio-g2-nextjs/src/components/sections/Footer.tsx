@@ -100,7 +100,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-white/5 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-white/30">
           <p>© {currentYear} G2Intelligence. Todos los derechos reservados.</p>
-          <p>NIT: 901.XXX.XXX-X | +57 311 678 3068 | Colombia</p>
+          <p>NIT: 94527160-5 | +57 311 678 3068 | Colombia</p>
         </div>
 
         {/* Made with love */}

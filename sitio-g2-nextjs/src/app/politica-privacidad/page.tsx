@@ -384,7 +384,7 @@ export default function PoliticaPrivacidad() {
 
           <div className="bg-gray-50 p-6 rounded-lg space-y-2">
             <p>
-              <strong>Empresa:</strong> G2 Intelligence S.A.S.
+              <strong>Empresa:</strong> G2 Intelligence S.A.S. (NIT 94527160-5)
             </p>
             <p>
               <strong>Correo Electrónico:</strong> <a href="mailto:privacidad@g2intelligence.co" className="text-blue-600 hover:underline">privacidad@g2intelligence.co</a>

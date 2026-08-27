@@ -26,7 +26,7 @@ export default function PoliticaCookies() {
         <div className="mb-8 border-b border-gray-200 pb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">Política de Cookies</h1>
           <p className="text-gray-600">
-            <strong>G2 Intelligence S.A.S.</strong>
+            <strong>G2 Intelligence S.A.S.</strong> (NIT 94527160-5)
             <br />
             Última actualización: {lastUpdated}
             <br />

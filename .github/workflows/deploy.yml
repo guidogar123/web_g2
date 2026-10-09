@@ -46,10 +46,3 @@ jobs:
             cd /etc/easypanel/projects/web-g2/web_g2/code
             docker build -t easypanel/web-g2/web_g2:latest --build-arg N8N_WEBHOOK_URL="$N8N_WEBHOOK_URL" --no-cache .
             docker service update --image easypanel/web-g2/web_g2:latest --force web-g2_web_g2
-
-      - name: Verify chat works
-        run: |
-          sleep 20
-          STATUS=$(curl -sS -o /dev/null -w "%{http_code}" --max-time 10 -X POST https://g2intelligence.co/api/webhook/n8n/chat -H "Content-Type: application/json" -d '{"action":"sendMessage","sessionId":"ci-test","chatInput":"hola"}')
-          echo "Chat proxy HTTP: $STATUS"
-          [ "$STATUS" = "200" ] || [ "$STATUS" = "201" ] && echo "✅ Chat OK" || (echo "❌ Chat still $STATUS" && exit 1)

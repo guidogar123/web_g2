@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Política de Cookies | G2 Intelligence',
+  title: 'Política de Cookies',
   description:
     'Política de Cookies de G2 Intelligence. Conoce cómo utilizamos cookies y tecnologías similares en nuestro sitio web.',
   openGraph: {

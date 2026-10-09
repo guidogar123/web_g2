@@ -1,4 +1,6 @@
+import Link from 'next/link';
 import { Brain, ExternalLink } from 'lucide-react';
+import { CITIES } from '@/app/[ciudad]/cities';
 
 const footerLinks = [
   {
@@ -96,6 +98,28 @@ export default function Footer() {
             </div>
           ))}
         </div>
+
+        {/* Cobertura por ciudad: enlaza el home a cada landing local */}
+        <nav aria-labelledby="cobertura-ciudades" className="border-t border-white/5 pt-8 mb-12">
+          <h4
+            id="cobertura-ciudades"
+            className="text-white font-semibold text-sm uppercase tracking-widest mb-4"
+          >
+            Cobertura por ciudad
+          </h4>
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-3">
+            {CITIES.map((city) => (
+              <li key={city.slug}>
+                <Link
+                  href={`/${city.slug}`}
+                  className="text-white/40 hover:text-white text-sm transition-colors duration-200"
+                >
+                  IA para ventas en {city.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
         {/* Bottom bar */}
         <div className="border-t border-white/5 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-white/30">

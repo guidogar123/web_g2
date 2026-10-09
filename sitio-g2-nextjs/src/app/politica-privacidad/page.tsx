@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Política de Privacidad | G2 Intelligence',
+  title: 'Política de Privacidad',
   description:
     'Política de privacidad de G2 Intelligence. Conoce cómo protegemos tus datos personales según la Ley 1581 de 2012, el Decreto 090 de 2018 y la Ley 2300 de 2023 de Colombia.',
   openGraph: {

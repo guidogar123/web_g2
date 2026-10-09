@@ -19,8 +19,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const city = getCityBySlug(ciudad);
   if (!city) return {};
 
-  const title = `Inteligencia Artificial para Ventas en ${city.name}`;
-  const description = `G2 Intelligence ofrece soluciones de IA, automatización de procesos y agentes inteligentes para empresas en ${city.name}, ${city.department}. Aumenta tus ventas y eficiencia con tecnología agentica.`;
+  const title = `IA para Ventas en ${city.name}`;
+  const description = `Agentes de IA y automatización de procesos para empresas de ${city.name}, ${city.department}.`;
 
   return {
     title,
@@ -33,16 +33,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: `https://g2intelligence.co/${ciudad}`,
       title,
       description,
+      images: [
+        {
+          url: 'https://g2intelligence.co/opengraph-image.png',
+          width: 1200,
+          height: 630,
+          type: 'image/png',
+          alt: `G2 Intelligence — IA para ventas en ${city.name}`,
+        },
+      ],
     },
     other: {
-      'og:image': 'https://g2intelligence.co/opengraph-image.png',
-      'og:image:width': '1200',
-      'og:image:height': '630',
-      'og:image:type': 'image/png',
       'geo.region': city.region,
       'geo.placename': `${city.name}, Colombia`,
       ICBM: `${city.lat},${city.lon}`,
-      'fb:app_id': 'A74MnrVggi4x-GZO31bxtCU',
     },
   };
 }
@@ -87,12 +91,15 @@ export default async function CiudadPage({ params }: Props) {
     url: `https://g2intelligence.co/${ciudad}`,
     telephone: '+573116783068',
     email: 'hola@g2intelligence.co',
-    address: {
-      '@type': 'PostalAddress',
-      addressLocality: city.name,
-      addressRegion: city.department,
-      addressCountry: 'CO',
-    },
+    // La sede está solo en Cali; en las demás ciudades el alcance geográfico va en areaServed.
+    ...(city.slug === 'cali' && {
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Cali',
+        addressRegion: 'Valle del Cauca',
+        addressCountry: 'CO',
+      },
+    }),
     areaServed: [
       { '@type': 'City', name: city.name },
       { '@type': 'AdministrativeArea', name: city.department },
@@ -191,6 +198,18 @@ export default async function CiudadPage({ params }: Props) {
               medida del sector y el tamaño de cada empresa en {city.name}, sin exigir un proyecto de
               TI completo para empezar.
             </p>
+          </div>
+        </section>
+
+        {/* Aplicación de la IA por sector local */}
+        <section className="max-w-3xl mx-auto px-6 py-16">
+          <h2 className="text-2xl font-bold mb-6">
+            Cómo se aplica la IA en las empresas de {city.name}
+          </h2>
+          <div className="space-y-4 text-white/70 leading-relaxed">
+            {city.sectorDetail.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
           </div>
         </section>
 

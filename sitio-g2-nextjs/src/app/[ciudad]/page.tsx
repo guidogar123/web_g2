@@ -33,12 +33,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: `https://g2intelligence.co/${ciudad}`,
       title,
       description,
+      images: [
+        {
+          url: 'https://g2intelligence.co/opengraph-image.png',
+          width: 1200,
+          height: 630,
+          type: 'image/png',
+          alt: `G2 Intelligence — IA para ventas en ${city.name}`,
+        },
+      ],
     },
     other: {
-      'og:image': 'https://g2intelligence.co/opengraph-image.png',
-      'og:image:width': '1200',
-      'og:image:height': '630',
-      'og:image:type': 'image/png',
       'geo.region': city.region,
       'geo.placename': `${city.name}, Colombia`,
       ICBM: `${city.lat},${city.lon}`,

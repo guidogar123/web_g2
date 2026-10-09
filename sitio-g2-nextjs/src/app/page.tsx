@@ -17,12 +17,17 @@ export async function generateMetadata(): Promise<Metadata> {
       title: 'G2 Intelligence — IA que Transforma Empresas en Cali',
       description:
         'Aumenta ventas y eficiencia con inteligencia artificial. Servicio para empresas en Cali y Valle del Cauca.',
+      images: [
+        {
+          url: 'https://g2intelligence.co/opengraph-image.png',
+          width: 1200,
+          height: 630,
+          type: 'image/png',
+          alt: 'G2 Intelligence — IA para empresas en Colombia',
+        },
+      ],
     },
     other: {
-      'og:image': 'https://g2intelligence.co/opengraph-image.png',
-      'og:image:width': '1200',
-      'og:image:height': '630',
-      'og:image:type': 'image/png',
       'fb:app_id': 'A74MnrVggi4x-GZO31bxtCU',
     },
   };

@@ -91,12 +91,15 @@ export default async function CiudadPage({ params }: Props) {
     url: `https://g2intelligence.co/${ciudad}`,
     telephone: '+573116783068',
     email: 'hola@g2intelligence.co',
-    address: {
-      '@type': 'PostalAddress',
-      addressLocality: city.name,
-      addressRegion: city.department,
-      addressCountry: 'CO',
-    },
+    // La sede está solo en Cali; en las demás ciudades el alcance geográfico va en areaServed.
+    ...(city.slug === 'cali' && {
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Cali',
+        addressRegion: 'Valle del Cauca',
+        addressCountry: 'CO',
+      },
+    }),
     areaServed: [
       { '@type': 'City', name: city.name },
       { '@type': 'AdministrativeArea', name: city.department },

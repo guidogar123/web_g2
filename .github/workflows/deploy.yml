@@ -32,7 +32,7 @@ jobs:
           username: root
           key: ${{ secrets.WEBG2_SSH_KEY }}
           source: "Dockerfile,sitio-g2-nextjs"
-          target: "/etc/easypanel/projects/posgresql/web_g2/code"
+          target: "/etc/easypanel/projects/web-g2/web_g2/code"
           strip_components: 0
 
       - name: Deploy on VPS
@@ -43,9 +43,9 @@ jobs:
           key: ${{ secrets.WEBG2_SSH_KEY }}
           script: |
             export N8N_WEBHOOK_URL="${{ secrets.N8N_WEBHOOK }}"
-            cd /etc/easypanel/projects/posgresql/web_g2/code
-            docker build -t easypanel/posgresql/web_g2:latest --build-arg N8N_WEBHOOK_URL="$N8N_WEBHOOK_URL" --no-cache .
-            docker service update --image easypanel/posgresql/web_g2:latest --force posgresql_web_g2
+            cd /etc/easypanel/projects/web-g2/web_g2/code
+            docker build -t easypanel/web-g2/web_g2:latest --build-arg N8N_WEBHOOK_URL="$N8N_WEBHOOK_URL" --no-cache .
+            docker service update --image easypanel/web-g2/web_g2:latest --force web-g2_web_g2
 
       - name: Verify chat works
         run: |

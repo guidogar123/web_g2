@@ -27,7 +27,7 @@ export default function TerminosServicio() {
         <div className="mb-8 border-b border-gray-200 pb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">Términos de Servicio</h1>
           <p className="text-gray-600">
-            <strong>G2 Intelligence S.A.S.</strong>
+            <strong>GUIDO GARZÓN PEÑA, actuando como propietario del establecimiento de comercio G2INTELLIGENCE</strong>
             <br />
             Última actualización: {lastUpdated}
             <br />
@@ -38,7 +38,7 @@ export default function TerminosServicio() {
         {/* Intro */}
         <section className="mb-8">
           <p className="text-gray-700 leading-relaxed mb-4">
-            Estos Términos de Servicio ("Términos") regulan el acceso y uso del sitio web g2intelligence.co, sus aplicaciones, productos y servicios (colectivamente, los "Servicios") ofrecidos por <strong>G2 Intelligence S.A.S.</strong> ("G2 Intelligence", "nosotros", "nos").
+            Estos Términos de Servicio ("Términos") regulan el acceso y uso del sitio web g2intelligence.co, sus aplicaciones, productos y servicios (colectivamente, los "Servicios") ofrecidos por <strong>GUIDO GARZÓN PEÑA, actuando como propietario del establecimiento de comercio G2INTELLIGENCE</strong> ("G2 Intelligence", "nosotros", "nos").
           </p>
           <p className="text-gray-700 leading-relaxed">
             Al acceder o utilizar nuestros Servicios, aceptas estos Términos en su totalidad. Si no estás de acuerdo con ellos, por favor no utilices nuestros Servicios.
@@ -148,7 +148,7 @@ export default function TerminosServicio() {
           <h2 className="text-2xl font-bold text-gray-900 mb-4">12. Contacto</h2>
           <div className="bg-gray-50 p-6 rounded-lg space-y-2">
             <p>
-              <strong>Empresa:</strong> G2 Intelligence S.A.S. (NIT 94527160-5)
+              <strong>Empresa:</strong> GUIDO GARZÓN PEÑA, actuando como propietario del establecimiento de comercio G2INTELLIGENCE (NIT 94.527.160-5)
             </p>
             <p>
               <strong>Correo Electrónico:</strong> <a href="mailto:hola@g2intelligence.co" className="text-blue-600 hover:underline">hola@g2intelligence.co</a>
@@ -165,7 +165,7 @@ export default function TerminosServicio() {
         {/* Footer */}
         <div className="mt-12 pt-8 border-t border-gray-200 text-center text-gray-600 text-sm">
           <p>
-            © 2026 G2 Intelligence S.A.S. Todos los derechos reservados.
+            © 2026 GUIDO GARZÓN PEÑA, actuando como propietario del establecimiento de comercio G2INTELLIGENCE. Todos los derechos reservados.
             <br />
             Última actualización: {lastUpdated}
           </p>

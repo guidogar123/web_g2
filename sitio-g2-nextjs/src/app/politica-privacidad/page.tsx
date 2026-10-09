@@ -34,7 +34,7 @@ export default function PoliticaPrivacidad() {
         <div className="mb-8 border-b border-gray-200 pb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">Política de Privacidad</h1>
           <p className="text-gray-600">
-            <strong>G2 Intelligence S.A.S.</strong>
+            <strong>GUIDO GARZÓN PEÑA, actuando como propietario del establecimiento de comercio G2INTELLIGENCE</strong>
             <br />
             Última actualización: {lastUpdated}
             <br />
@@ -45,7 +45,7 @@ export default function PoliticaPrivacidad() {
         {/* Intro */}
         <section className="mb-8">
           <p className="text-gray-700 leading-relaxed mb-4">
-            G2 Intelligence S.A.S. ("nosotros", "nos", "la Empresa" o "G2 Intelligence") respeta tu privacidad y está comprometida con proteger tus datos personales. Esta Política de Privacidad describe cómo recopilamos, usamos, compartimos y protegemos tu información cuando utilizas nuestro sitio web g2intelligence.co, nuestras aplicaciones, servicios y productos (colectivamente, los "Servicios").
+            GUIDO GARZÓN PEÑA, actuando como propietario del establecimiento de comercio G2INTELLIGENCE ("nosotros", "nos", "la Empresa" o "G2 Intelligence") respeta tu privacidad y está comprometido con proteger tus datos personales. Esta Política de Privacidad describe cómo recopilamos, usamos, compartimos y protegemos tu información cuando utilizas nuestro sitio web g2intelligence.co, nuestras aplicaciones, servicios y productos (colectivamente, los "Servicios").
           </p>
           <p className="text-gray-700 leading-relaxed mb-4">
             Nuestro procesamiento de datos personales cumple con la <strong>Ley Estatutaria 1581 de 2012 sobre Habeas Data</strong>, el <strong>Decreto 1377 de 2013</strong> (compilado en el <strong>Decreto 1074 de 2015</strong>), el <strong>Decreto 090 de 2018</strong>, la <strong>Circular Única de la Superintendencia de Industria y Comercio (SIC)</strong> en su Título V, la <strong>Ley 2300 de 2023</strong> en materia de comunicaciones comerciales, así como con las regulaciones internacionales aplicables.
@@ -384,7 +384,7 @@ export default function PoliticaPrivacidad() {
 
           <div className="bg-gray-50 p-6 rounded-lg space-y-2">
             <p>
-              <strong>Empresa:</strong> G2 Intelligence S.A.S. (NIT 94527160-5)
+              <strong>Empresa:</strong> GUIDO GARZÓN PEÑA, actuando como propietario del establecimiento de comercio G2INTELLIGENCE (NIT 94.527.160-5)
             </p>
             <p>
               <strong>Correo Electrónico:</strong> <a href="mailto:privacidad@g2intelligence.co" className="text-blue-600 hover:underline">privacidad@g2intelligence.co</a>
@@ -408,7 +408,7 @@ export default function PoliticaPrivacidad() {
         {/* Footer */}
         <div className="mt-12 pt-8 border-t border-gray-200 text-center text-gray-600 text-sm">
           <p>
-            © 2026 G2 Intelligence S.A.S. Todos los derechos reservados.
+            © 2026 GUIDO GARZÓN PEÑA, actuando como propietario del establecimiento de comercio G2INTELLIGENCE. Todos los derechos reservados.
             <br />
             Última actualización: {lastUpdated}
           </p>

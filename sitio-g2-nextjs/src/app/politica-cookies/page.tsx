@@ -26,7 +26,7 @@ export default function PoliticaCookies() {
         <div className="mb-8 border-b border-gray-200 pb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">Política de Cookies</h1>
           <p className="text-gray-600">
-            <strong>G2 Intelligence S.A.S.</strong> (NIT 94527160-5)
+            <strong>GUIDO GARZÓN PEÑA</strong>, actuando como propietario del establecimiento de comercio <strong>G2INTELLIGENCE</strong> (NIT 94.527.160-5)
             <br />
             Última actualización: {lastUpdated}
             <br />
@@ -118,7 +118,7 @@ export default function PoliticaCookies() {
         {/* Footer */}
         <div className="mt-12 pt-8 border-t border-gray-200 text-center text-gray-600 text-sm">
           <p>
-            © 2026 G2 Intelligence S.A.S. Todos los derechos reservados.
+            © 2026 GUIDO GARZÓN PEÑA, actuando como propietario del establecimiento de comercio G2INTELLIGENCE. Todos los derechos reservados.
             <br />
             Última actualización: {lastUpdated}
           </p>

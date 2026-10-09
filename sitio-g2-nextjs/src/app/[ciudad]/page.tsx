@@ -198,6 +198,18 @@ export default async function CiudadPage({ params }: Props) {
           </div>
         </section>
 
+        {/* Aplicación de la IA por sector local */}
+        <section className="max-w-3xl mx-auto px-6 py-16">
+          <h2 className="text-2xl font-bold mb-6">
+            Cómo se aplica la IA en las empresas de {city.name}
+          </h2>
+          <div className="space-y-4 text-white/70 leading-relaxed">
+            {city.sectorDetail.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          </div>
+        </section>
+
         {/* Services */}
         <section className="max-w-5xl mx-auto px-6 py-20">
           <h2 className="text-3xl font-bold text-center mb-4">

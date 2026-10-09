@@ -65,6 +65,21 @@ export const metadata: Metadata = {
   },
 };
 
+// Organización mínima para todas las páginas (incluidas las legales). El LocalBusiness
+// con datos de contacto y cobertura vive solo en el home y en cada landing de ciudad.
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'G2 Intelligence',
+  url: 'https://g2intelligence.co',
+  sameAs: [
+    'https://www.facebook.com/profile.php?id=61552402294706',
+    'https://x.com/g2intelligen_co',
+    'https://www.instagram.com/g2intelligence_co/',
+    'https://www.tiktok.com/@g2intelligence_co',
+  ],
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -73,6 +88,10 @@ export default function RootLayout({
   return (
     <html lang="es-CO" className={`${inter.variable} ${robotoMono.variable}`}>
       <body className={`${inter.className} antialiased`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
         {children}
         <Toaster richColors position="top-right" />
       </body>

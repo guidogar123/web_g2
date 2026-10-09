@@ -46,58 +46,76 @@ const servicesSchema = {
   '@type': 'ItemList',
   itemListElement: [
     {
-      '@type': 'Service',
+      '@type': 'ListItem',
       position: 1,
-      name: 'Infraestructura de IA',
-      description:
-        'Implementamos agentes inteligentes que automatizan tareas complejas, mejoran la atención al cliente y optimizan la toma de decisiones en tiempo real.',
-      provider: { '@type': 'Organization', name: 'G2 Intelligence', url: 'https://g2intelligence.co' },
-      areaServed: { '@type': 'AdministrativeArea', name: 'Valle del Cauca' },
+      item: {
+        '@type': 'Service',
+        name: 'Infraestructura de IA',
+        description:
+          'Implementamos agentes inteligentes que automatizan tareas complejas, mejoran la atención al cliente y optimizan la toma de decisiones en tiempo real.',
+        provider: { '@type': 'Organization', name: 'G2 Intelligence', url: 'https://g2intelligence.co' },
+        areaServed: { '@type': 'AdministrativeArea', name: 'Valle del Cauca' },
+      },
     },
     {
-      '@type': 'Service',
+      '@type': 'ListItem',
       position: 2,
-      name: 'Optimización de Procesos',
-      description:
-        'Analizamos y redefinimos tus procesos de negocio para eliminar cuellos de botella, reducir costos y aumentar la eficiencia operativa.',
-      provider: { '@type': 'Organization', name: 'G2 Intelligence', url: 'https://g2intelligence.co' },
-      areaServed: { '@type': 'AdministrativeArea', name: 'Valle del Cauca' },
+      item: {
+        '@type': 'Service',
+        name: 'Optimización de Procesos',
+        description:
+          'Analizamos y redefinimos tus procesos de negocio para eliminar cuellos de botella, reducir costos y aumentar la eficiencia operativa.',
+        provider: { '@type': 'Organization', name: 'G2 Intelligence', url: 'https://g2intelligence.co' },
+        areaServed: { '@type': 'AdministrativeArea', name: 'Valle del Cauca' },
+      },
     },
     {
-      '@type': 'Service',
+      '@type': 'ListItem',
       position: 3,
-      name: 'Aumento de Ventas con IA',
-      description:
-        'Integramos herramientas de IA en tu ciclo de ventas para identificar oportunidades, personalizar propuestas y cerrar más negocios.',
-      provider: { '@type': 'Organization', name: 'G2 Intelligence', url: 'https://g2intelligence.co' },
-      areaServed: { '@type': 'AdministrativeArea', name: 'Valle del Cauca' },
+      item: {
+        '@type': 'Service',
+        name: 'Aumento de Ventas con IA',
+        description:
+          'Integramos herramientas de IA en tu ciclo de ventas para identificar oportunidades, personalizar propuestas y cerrar más negocios.',
+        provider: { '@type': 'Organization', name: 'G2 Intelligence', url: 'https://g2intelligence.co' },
+        areaServed: { '@type': 'AdministrativeArea', name: 'Valle del Cauca' },
+      },
     },
     {
-      '@type': 'Service',
+      '@type': 'ListItem',
       position: 4,
-      name: 'Consultoría Estratégica en IA',
-      description:
-        'Guiamos a tu empresa en la adopción de IA: diagnóstico, hoja de ruta, selección de herramientas y gestión del cambio organizacional.',
-      provider: { '@type': 'Organization', name: 'G2 Intelligence', url: 'https://g2intelligence.co' },
-      areaServed: { '@type': 'AdministrativeArea', name: 'Valle del Cauca' },
+      item: {
+        '@type': 'Service',
+        name: 'Consultoría Estratégica en IA',
+        description:
+          'Guiamos a tu empresa en la adopción de IA: diagnóstico, hoja de ruta, selección de herramientas y gestión del cambio organizacional.',
+        provider: { '@type': 'Organization', name: 'G2 Intelligence', url: 'https://g2intelligence.co' },
+        areaServed: { '@type': 'AdministrativeArea', name: 'Valle del Cauca' },
+      },
     },
     {
-      '@type': 'Service',
+      '@type': 'ListItem',
       position: 5,
-      name: 'Análisis de Datos con IA',
-      description:
-        'Convertimos tus datos en decisiones con dashboards inteligentes, modelos predictivos y análisis automatizados.',
-      provider: { '@type': 'Organization', name: 'G2 Intelligence', url: 'https://g2intelligence.co' },
-      areaServed: { '@type': 'AdministrativeArea', name: 'Valle del Cauca' },
+      item: {
+        '@type': 'Service',
+        name: 'Análisis de Datos con IA',
+        description:
+          'Convertimos tus datos en decisiones con dashboards inteligentes, modelos predictivos y análisis automatizados.',
+        provider: { '@type': 'Organization', name: 'G2 Intelligence', url: 'https://g2intelligence.co' },
+        areaServed: { '@type': 'AdministrativeArea', name: 'Valle del Cauca' },
+      },
     },
     {
-      '@type': 'Service',
+      '@type': 'ListItem',
       position: 6,
-      name: 'Integración de Sistemas con IA',
-      description:
-        'Conectamos tus herramientas existentes con capacidades de IA para flujos de trabajo unificados y sin fricciones.',
-      provider: { '@type': 'Organization', name: 'G2 Intelligence', url: 'https://g2intelligence.co' },
-      areaServed: { '@type': 'AdministrativeArea', name: 'Valle del Cauca' },
+      item: {
+        '@type': 'Service',
+        name: 'Integración de Sistemas con IA',
+        description:
+          'Conectamos tus herramientas existentes con capacidades de IA para flujos de trabajo unificados y sin fricciones.',
+        provider: { '@type': 'Organization', name: 'G2 Intelligence', url: 'https://g2intelligence.co' },
+        areaServed: { '@type': 'AdministrativeArea', name: 'Valle del Cauca' },
+      },
     },
   ],
 };

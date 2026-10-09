@@ -47,7 +47,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       'geo.region': city.region,
       'geo.placename': `${city.name}, Colombia`,
       ICBM: `${city.lat},${city.lon}`,
-      'fb:app_id': 'A74MnrVggi4x-GZO31bxtCU',
     },
   };
 }

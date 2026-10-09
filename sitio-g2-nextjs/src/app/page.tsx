@@ -27,9 +27,6 @@ export async function generateMetadata(): Promise<Metadata> {
         },
       ],
     },
-    other: {
-      'fb:app_id': 'A74MnrVggi4x-GZO31bxtCU',
-    },
   };
 }
 

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Términos de Servicio | G2 Intelligence',
+  title: 'Términos de Servicio',
   description:
     'Términos de Servicio de G2 Intelligence. Condiciones de uso de nuestro sitio web y servicios de inteligencia artificial y automatización.',
   openGraph: {

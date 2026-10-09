@@ -107,7 +107,7 @@ export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: 'G2 Intelligence — Inteligencia Artificial para Ventas y Automatización en Cali',
+    title: 'G2 Intelligence: Inteligencia Artificial y Ventas en Cali',
     alternates: { canonical: 'https://g2intelligence.co' },
     description:
       'Transforma tu empresa con IA agentica. G2 Intelligence ofrece automatización de procesos, agentes inteligentes y consultoría en Cali, Jamundí, Palmira, Yumbo y Valle del Cauca.',

@@ -108,11 +108,25 @@ export default async function CiudadPage({ params }: Props) {
     ],
   };
 
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: city.localFaq.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
 
       <div className="min-h-screen bg-[#050505] text-white">
@@ -165,20 +179,18 @@ export default async function CiudadPage({ params }: Props) {
         </section>
 
         {/* Stats */}
-        <section className="border-y border-white/10 py-12">
-          <div className="max-w-5xl mx-auto px-6 grid grid-cols-3 gap-6 text-center">
-            <div>
-              <div className="text-3xl font-bold text-emerald-400">+50</div>
-              <div className="text-sm text-white/60 mt-1">Proyectos Agenticos</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-emerald-400">3x</div>
-              <div className="text-sm text-white/60 mt-1">Aumento en Ventas</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-emerald-400">98%</div>
-              <div className="text-sm text-white/60 mt-1">Clientes Satisfechos</div>
-            </div>
+        {/* Contexto económico local */}
+        <section className="border-y border-white/10 py-12 bg-white/[0.02]">
+          <div className="max-w-3xl mx-auto px-6">
+            <p className="text-white/70 leading-relaxed">
+              {city.name} es una ciudad donde {city.sectorNote}. Las empresas de{' '}
+              <strong className="text-white">{city.sector}</strong> que operan en {city.department}{' '}
+              suelen perder tiempo en tareas repetitivas que hoy pueden automatizarse con agentes de
+              inteligencia artificial: atención por WhatsApp, seguimiento de pedidos, reportes y
+              comunicación con proveedores. En G2 Intelligence diseñamos esas automatizaciones a la
+              medida del sector y el tamaño de cada empresa en {city.name}, sin exigir un proyecto de
+              TI completo para empezar.
+            </p>
           </div>
         </section>
 
@@ -219,6 +231,21 @@ export default async function CiudadPage({ params }: Props) {
             >
               Hablar con un experto
             </Link>
+          </div>
+        </section>
+
+        {/* FAQ local */}
+        <section className="max-w-3xl mx-auto px-6 py-20">
+          <h2 className="text-2xl font-bold text-center mb-10">
+            Preguntas frecuentes sobre IA en {city.name}
+          </h2>
+          <div className="space-y-6">
+            {city.localFaq.map((item) => (
+              <div key={item.q} className="p-5 rounded-xl border border-white/10 bg-white/5">
+                <h3 className="font-semibold mb-2">{item.q}</h3>
+                <p className="text-sm text-white/60">{item.a}</p>
+              </div>
+            ))}
           </div>
         </section>
 

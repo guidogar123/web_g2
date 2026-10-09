@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!city) return {};
 
   const title = `IA para Ventas en ${city.name}`;
-  const description = `Agentes de IA y automatización de procesos para empresas de ${city.name}, ${city.department}: más ventas y menos tareas repetitivas.`;
+  const description = `Agentes de IA y automatización de procesos para empresas de ${city.name}, ${city.department}.`;
 
   return {
     title,

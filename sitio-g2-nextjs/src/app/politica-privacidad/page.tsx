@@ -11,13 +11,14 @@ export const metadata: Metadata = {
     description:
       'Política de privacidad de G2 Intelligence. Cumple Ley 1581 de 2012, Decreto 090 de 2018, Ley 2300 de 2023 y requisitos Meta Developers.',
     siteName: 'G2 Intelligence',
-  },
-  other: {
-    'og:image': 'https://g2intelligence.co/opengraph-image.png',
-    'og:image:width': '1200',
-    'og:image:height': '630',
-    'og:image:type': 'image/png',
-    'fb:app_id': 'A74MnrVggi4x-GZO31bxtCU',
+    images: [
+      {
+        url: 'https://g2intelligence.co/opengraph-image.png',
+        width: 1200,
+        height: 630,
+        type: 'image/png',
+      },
+    ],
   },
   alternates: {
     canonical: 'https://g2intelligence.co/politica-privacidad',

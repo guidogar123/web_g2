@@ -128,7 +128,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: 'G2 Intelligence: Inteligencia Artificial y Ventas en Cali',
     alternates: { canonical: 'https://g2intelligence.co' },
     description:
-      'Transforma tu empresa con IA agentica. G2 Intelligence ofrece automatización de procesos, agentes inteligentes y consultoría en Cali, Jamundí, Palmira, Yumbo y Valle del Cauca.',
+      'Transforma tu empresa con IA agéntica: automatización de procesos, agentes inteligentes y consultoría en Cali, Jamundí, Palmira, Yumbo y Valle del Cauca.',
     openGraph: {
       type: 'website',
       locale: 'es_CO',

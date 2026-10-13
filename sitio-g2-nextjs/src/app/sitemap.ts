@@ -41,6 +41,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.3,
     },
     {
+      url: 'https://g2intelligence.co/eliminacion-de-datos',
+      lastModified: new Date('2026-10-13'),
+      changeFrequency: 'yearly',
+      priority: 0.3,
+    },
+    {
       url: 'https://g2intelligence.co/recursos/lista-ley-1581',
       lastModified: new Date(),
       changeFrequency: 'monthly',

@@ -66,7 +66,7 @@ export default function EliminacionDeDatos() {
             <li>Los datos que quieres que eliminemos, o &quot;todos&quot;</li>
           </ul>
           <p className="text-gray-700 leading-relaxed mt-4">
-            También puedes enviarnos un mensaje directo con la palabra <strong>BAJA</strong> desde la cuenta de la que quieres que borremos los datos. Para proteger tu información, podemos pedirte que confirmes que eres el titular.
+            Si recibiste un mensaje automático nuestro por Instagram, ese mensaje trae un <strong>enlace de baja</strong>: al abrirlo dejamos de escribirte de inmediato y no te enviamos más mensajes automáticos. Ese enlace deja de escribirte, pero no borra los datos que ya tenemos: para eso, escríbenos al correo de arriba. Para proteger tu información, podemos pedirte que confirmes que eres el titular.
           </p>
         </section>
 
